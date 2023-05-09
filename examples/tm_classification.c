@@ -26,9 +26,9 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-#include "common.h"
-#include "tengine_c_api.h"
-#include "tengine_operations.h"
+#include "./common/common.h"
+#include "../include/tengine_c_api.h"
+#include "./common/tengine_operations.h"
 
 #define DEFAULT_IMG_H 227
 #define DEFAULT_IMG_W 227

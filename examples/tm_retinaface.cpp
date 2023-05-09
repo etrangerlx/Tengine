@@ -43,10 +43,13 @@
 #include <string>
 #include <algorithm>
 #include <cmath>
-#include "common.h"
 
-#include "tengine_c_api.h"
-#include "tengine_operations.h"
+
+
+#include "./common/common.h"
+
+#include "../include/tengine_c_api.h"
+#include "./common/tengine_operations.h"
 
 #define DEFAULT_REPEAT_COUNT 1
 #define DEFAULT_THREAD_COUNT 1

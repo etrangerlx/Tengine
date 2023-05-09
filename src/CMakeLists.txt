@@ -71,7 +71,7 @@ target_include_directories(${CMAKE_PROJECT_NAME} PRIVATE ${TENGINE_PRIVATE_INC_D
 if (ANDROID)
     target_link_libraries(${CMAKE_PROJECT_NAME} android)
 else()
-    target_link_libraries(${CMAKE_PROJECT_NAME} pthread dl m)
+    target_link_libraries(${CMAKE_PROJECT_NAME} pthread  m)
 endif()
 
 install (TARGETS ${CMAKE_PROJECT_NAME} DESTINATION lib)

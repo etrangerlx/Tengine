@@ -36,7 +36,7 @@ if(NOT DEFINED CMAKE_INSTALL_PREFIX)
     set(CMAKE_INSTALL_PREFIX "${CMAKE_BINARY_DIR}/install" CACHE PATH "Installation Directory")
 endif()
 message(STATUS "CMAKE_INSTALL_PREFIX = ${CMAKE_INSTALL_PREFIX}")
-
+set(CMAKE_CXX_COMPILER_WORKS 1)
 # Enable the languages which in use
 ENABLE_LANGUAGE (C CXX)
 

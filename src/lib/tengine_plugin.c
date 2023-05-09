@@ -1,7 +1,8 @@
 #include <stdio.h>
 #include <string.h>
+#ifdef __ANDROID__
 #include <dlfcn.h>
-
+#endif
 #include "compiler.h"
 #include "sys_port.h"
 #include "tengine_c_api.h"
@@ -23,6 +24,7 @@ static struct vector* plugin_list = NULL;
 
 static int exec_so_func(so_handle_t handle, const char* func_name)
 {
+#ifdef __ANDROID__
     void* func = dlsym(handle, func_name);
 
     if (func == NULL)
@@ -38,7 +40,7 @@ static int exec_so_func(so_handle_t handle, const char* func_name)
         TLOG_ERR("exec so func: %s failed\n", func_name);
         return -1;
     }
-
+#endif
     return 0;
 }
 
@@ -73,7 +75,7 @@ int DLLEXPORT load_tengine_plugin(const char* plugin_name, const char* fname, co
             return -1;
         }
     }
-
+#ifdef __ANDROID__
     /* load the so */
     header.handle = dlopen(fname, RTLD_LAZY);
 
@@ -91,7 +93,7 @@ int DLLEXPORT load_tengine_plugin(const char* plugin_name, const char* fname, co
         dlclose(header.handle);
         return -1;
     }
-
+#endif
     header.name = strdup(plugin_name);
     header.fname = strdup(fname);
 
@@ -127,9 +129,9 @@ int DLLEXPORT unload_tengine_plugin(const char* plugin_name, const char* rel_fun
 
     if (rel_func_name)
         exec_so_func(target->handle, rel_func_name);
-
+#ifdef __ANDROID__
     dlclose(target->handle);
-
+#endif
     remove_vector_data(plugin_list, target);
 
     if (get_vector_num(plugin_list) == 0)

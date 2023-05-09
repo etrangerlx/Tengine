@@ -44,7 +44,9 @@
 #include "tengine_c_api.h"
 
 //#ifndef __ANDROID__
+#ifdef __ANDROID__
 #include <sys/syscall.h>
+#endif
 #include <sched.h>
 #include <unistd.h>
 #include <stdint.h>
@@ -196,6 +198,7 @@ static int get_max_freq_khz(int cpuid)
 
 static int set_sched_affinity(size_t thread_affinity_mask)
 {
+#ifdef __ANDROID__
     // cpu_set_t definition
     // ref http://stackoverflow.com/questions/16319725/android-set-thread-affinity
 #ifndef CPU_SETSIZE
@@ -238,7 +241,7 @@ static int set_sched_affinity(size_t thread_affinity_mask)
         fprintf(stderr, "syscall error %d\n", syscallret);
         return -1;
     }
-
+#endif
     return 0;
 }
 

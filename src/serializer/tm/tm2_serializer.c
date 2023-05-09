@@ -27,7 +27,9 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <unistd.h>
+#ifdef __ANDROID__
 #include <sys/mman.h>
+#endif
 #include <fcntl.h>
 
 #include "sys_port.h"
@@ -883,13 +885,13 @@ static int unload_graph(struct serializer* s, struct ir_graph* graph, void* s_pr
 
     graph->serializer = NULL;
     graph->serializer_priv = NULL;
-
+#ifdef __ANDROID__
     if (priv->fd >= 0)
     {
         munmap(( void* )priv->base, priv->mem_len);
         close(priv->fd);
     }
-
+#endif
     sys_free(priv);
 
     return 0;

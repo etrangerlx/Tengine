@@ -299,7 +299,7 @@ static void sgemm_uint8(struct ir_tensor* input_tensor, struct ir_tensor* filter
         }
     }
 }
-
+#if 0
 int conv_kernel_get_shared_mem_size(struct ir_tensor* input, struct ir_tensor* output, struct conv_param* param)
 {
     int group = param->group;
@@ -382,3 +382,4 @@ int conv_kernel_set_shared_mem(struct conv_priv_info* priv_info, void* mem, int 
     priv_info->im2col_buffer_size = mem_size;
     return 0;
 }
+#endif

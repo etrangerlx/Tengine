@@ -91,7 +91,7 @@ static inline uint8_t calc_max_uint8(const uint8_t* input, int layout, int c, in
 
     return max;
 }
-
+#if 0
 int pooling_kernel_ref_run(struct ir_tensor* input_tensor, struct ir_tensor* output_tensor,
                            struct pool_param* pool_param, int num_thread)
 {
@@ -264,3 +264,4 @@ int pooling_kernel_ref_run(struct ir_tensor* input_tensor, struct ir_tensor* out
 
     return 0;
 }
+#endif

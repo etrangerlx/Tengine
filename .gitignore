@@ -49,7 +49,7 @@ build*/
 
 # IDE
 .vs
-.vscode
+# .vscode
 
 # 3rd
 3rdparty

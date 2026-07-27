@@ -1,0 +1,22 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "convert",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}/build/tools/convert_tool/convert_tool",
+            "args": ["-f","onnx",
+                    "-m", "${workspaceFolder}/tools/align_tool/mnist.onnx",
+                    "-o","${workspaceFolder}/tools/align_tool/mnist_.tmfile"],
+            "cwd": "${workspaceFolder}/build/",
+            "preLaunchTask": "cmake build",  // 先编译，后调试
+            "MIMode": "gdb",
+            "miDebuggerPath": "/usr/bin/gdb"
+        },
+
+    ]
+}

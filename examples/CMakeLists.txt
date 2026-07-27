@@ -108,7 +108,8 @@ ENDIF()
 # add examples with opencv
 # set(OpenCV_DIR /mnt/d/ubuntu/opencv_install/linux-armv7/lib/cmake/opencv4)
 FIND_PACKAGE(OpenCV)
-
+message(STATUS "OpenCV_INCLUDE_DIRS:${OpenCV_INCLUDE_DIRS}")
+message(STATUS "OpenCV_LIBS :${OpenCV_LIBS}")
 IF (OpenCV_FOUND)
     # macro for adding examples
     FUNCTION (TENGINE_EXAMPLE_CV name file)

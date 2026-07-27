@@ -1,0 +1,51 @@
+{
+    // ctrl + shift + P,輸入:Tasks: Run Task
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "mkdir build",
+            "type": "shell",
+            "command": "mkdir",
+            "args": ["-p", "build"],  // 使用 -p 参数避免目录已存在时报错
+            "options": {
+                "cwd": "${workspaceFolder}"  // 在项目根目录执行
+            }
+        },
+        {
+            "label": "cmake configure",
+            "type": "shell",
+            "command": "cmake",
+            "args": [
+                "-S","..",
+                "-DCMAKE_BUILD_TYPE=Debug",
+                "-DTENGINE_BUILD_CONVERT_TOOL=ON",
+                "-DTENGINE_ENABLE_OPENCL=ON"
+            ],
+            "options": {
+                "cwd": "${workspaceFolder}/build",
+                "env": {}
+            },
+            "dependsOn": "mkdir build"
+        },
+        {
+            "label": "cmake build",
+            "type": "shell",
+            "command": "cmake",
+            "args": [
+                "--build",".",
+                "-j8"
+            ],
+            "options": {
+                "cwd": "${workspaceFolder}/build",
+                "env": {
+                    "VALUE": ""
+                }
+            },
+            "dependsOn": "cmake configure",
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            }
+        }
+    ]
+}

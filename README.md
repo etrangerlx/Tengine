@@ -84,6 +84,14 @@ Tengine 核心代码由 4 个模块组成：
 
 - [Road map](doc/docs_zh/introduction/roadmap.md)
 
+## 算子数据集
+```
+  git submodule add git@github.com:BUG1989/onnx_op_test_data.git third_party/onnx_op_test_data
+  git submodule sync
+  git submodule update --init
+  git submodule sync --recursive
+```
+
 ## 致谢
 
 Tengine Lite 参考和借鉴了下列项目：

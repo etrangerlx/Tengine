@@ -1,0 +1,4 @@
+[submodule "third_party/onnx_op_test_data"]
+	path = third_party/onnx_op_test_data
+	url = git@github.com:BUG1989/onnx_op_test_data.git
+	branch = main

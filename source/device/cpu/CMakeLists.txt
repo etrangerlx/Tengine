@@ -230,10 +230,6 @@ IF (${TENGINE_TARGET_PROCESSOR} MATCHES "lp64dv")
 ENDIF()
 
 
-# 7. execute configuration to register operators
-GENERATE_REGISTER_HEADER_FILE ("register_" "unregister_" "_op" "${CMAKE_SOURCE_DIR}/source/device/cpu/cpu_ops.h.in" "${CMAKE_BINARY_DIR}/source/device/cpu/cpu_ops.h" "${_CPU_REGISTER_SOURCE}")
-
-
 # 8. add build optioncds for cpu device
 # 8.1 is a gcc or clang like compiler
 IF (TENGINE_COMPILER_GCC OR TENGINE_COMPILER_CLANG)

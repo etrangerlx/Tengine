@@ -98,7 +98,6 @@ OPTION (TENGINE_ONLINE_REPORT               "online report"                     
 INCLUDE ("${CMAKE_CURRENT_SOURCE_DIR}/cmake/check.cmake")
 INCLUDE ("${CMAKE_CURRENT_SOURCE_DIR}/cmake/cuda.cmake")
 INCLUDE ("${CMAKE_CURRENT_SOURCE_DIR}/cmake/torch.cmake")
-INCLUDE ("${CMAKE_CURRENT_SOURCE_DIR}/cmake/registry.cmake")
 INCLUDE ("${CMAKE_CURRENT_SOURCE_DIR}/cmake/utility.cmake")
 
 # Project name

@@ -32,7 +32,6 @@ LIST (APPEND _OP_HEADER_PATH "${CMAKE_SOURCE_DIR}/source/operator/prototype")
 
 # config the operator prototype
 AUX_SOURCE_DIRECTORY("${_OP_ROOT}/prototype" _OP_PROTOTYPE_SOURCE)
-GENERATE_REGISTER_HEADER_FILE("register_" "unregister_" "_op" "${_OP_ROOT}/prototype.h.in" "${CMAKE_BINARY_DIR}/source/operator/prototype.h" "${_OP_PROTOTYPE_SOURCE}")
 
 
 # operator level source files

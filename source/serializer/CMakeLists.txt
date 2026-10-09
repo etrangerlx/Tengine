@@ -40,12 +40,8 @@ FILE (GLOB   _SRL_TM2_SRL_SOURCE    "${_SRL_SRC_ROOT}/tmfile/*.c")
 FILE (GLOB   _SRL_TM2_OPS_SOURCE    "${_SRL_SRC_ROOT}/tmfile/op/*.c")
 
 
-# generate all serializer
-GENERATE_REGISTER_HEADER_FILE("register_" "unregister_" "" "${_SRL_SRC_ROOT}/register.h.in" "${_SRL_BIN_ROOT}/register.h" "${_SRL_TM2_SRL_SOURCE}")
-
 # generator ops for serializer
 AUX_SOURCE_DIRECTORY("${_SRL_SRC_ROOT}/tmfile/op" _TENGINE_TM2_OPS_SOURCE)
-GENERATE_REGISTER_HEADER_FILE("register_" "unregister_" "_op" "${_SRL_SRC_ROOT}/tmfile/tm2_ops.h.in" "${_SRL_BIN_ROOT}/tmfile/tm2_ops.h" "${_SRL_TM2_OPS_SOURCE}")
 
 
 # gather

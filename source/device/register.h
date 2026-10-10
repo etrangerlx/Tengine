@@ -26,99 +26,48 @@
 
 #include "utility/log.h"
 
-/*
- * Enabled devices are listed here. The CPU device is always built. Each
- * optional device is guarded by the TENGINE_ENABLE_<DEVICE> macro, which is
- * defined by source/device/CMakeLists.txt when the matching CMake option is
- * turned on.
- */
-
-/* the CPU device is always available */
-#define TENGINE_DEVICE_LIST(X)                  \
-    X(cpu_device)
+extern int register_cpu_device(void);
+extern int unregister_cpu_device(void);
 
 #ifdef TENGINE_ENABLE_ACL
-#define TENGINE_DEVICE_ACL_LIST(X)              X(acl_device)
+extern int register_acl_device(void);
+extern int unregister_acl_device(void);
 #endif
 
 #ifdef TENGINE_ENABLE_CUDA
-#define TENGINE_DEVICE_CUDA_LIST(X)             X(cuda_device)
+extern int register_cuda_device(void);
+extern int unregister_cuda_device(void);
 #endif
 
 #ifdef TENGINE_ENABLE_OPENCL
-#define TENGINE_DEVICE_OPENCL_LIST(X)           X(ocl_device)
+extern int register_ocl_device(void);
+extern int unregister_ocl_device(void);
 #endif
 
 #ifdef TENGINE_ENABLE_OPENDLA
-#define TENGINE_DEVICE_OPENDLA_LIST(X)          X(odla_device)
+extern int register_odla_device(void);
+extern int unregister_odla_device(void);
 #endif
 
 #ifdef TENGINE_ENABLE_TENSORRT
-#define TENGINE_DEVICE_TENSORRT_LIST(X)         X(trt_device)
+extern int register_trt_device(void);
+extern int unregister_trt_device(void);
 #endif
 
 #ifdef TENGINE_ENABLE_TIM_VX
-#define TENGINE_DEVICE_TIM_VX_LIST(X)           X(timvx_device)
+extern int register_timvx_device(void);
+extern int unregister_timvx_device(void);
 #endif
 
 #ifdef TENGINE_ENABLE_TORCH
-#define TENGINE_DEVICE_TORCH_LIST(X)            X(torch_device)
+extern int register_torch_device(void);
+extern int unregister_torch_device(void);
 #endif
 
 #ifdef TENGINE_ENABLE_VULKAN
-#define TENGINE_DEVICE_VULKAN_LIST(X)           X(vulkan_device)
+extern int register_vulkan_device(void);
+extern int unregister_vulkan_device(void);
 #endif
-
-#define TENGINE_DECLARE_DEVICE(name)            \
-    extern int register_##name(void);           \
-    extern int unregister_##name(void);
-
-TENGINE_DEVICE_LIST(TENGINE_DECLARE_DEVICE)
-#ifdef TENGINE_DEVICE_ACL_LIST
-TENGINE_DEVICE_ACL_LIST(TENGINE_DECLARE_DEVICE)
-#endif
-#ifdef TENGINE_DEVICE_CUDA_LIST
-TENGINE_DEVICE_CUDA_LIST(TENGINE_DECLARE_DEVICE)
-#endif
-#ifdef TENGINE_DEVICE_OPENCL_LIST
-TENGINE_DEVICE_OPENCL_LIST(TENGINE_DECLARE_DEVICE)
-#endif
-#ifdef TENGINE_DEVICE_OPENDLA_LIST
-TENGINE_DEVICE_OPENDLA_LIST(TENGINE_DECLARE_DEVICE)
-#endif
-#ifdef TENGINE_DEVICE_TENSORRT_LIST
-TENGINE_DEVICE_TENSORRT_LIST(TENGINE_DECLARE_DEVICE)
-#endif
-#ifdef TENGINE_DEVICE_TIM_VX_LIST
-TENGINE_DEVICE_TIM_VX_LIST(TENGINE_DECLARE_DEVICE)
-#endif
-#ifdef TENGINE_DEVICE_TORCH_LIST
-TENGINE_DEVICE_TORCH_LIST(TENGINE_DECLARE_DEVICE)
-#endif
-#ifdef TENGINE_DEVICE_VULKAN_LIST
-TENGINE_DEVICE_VULKAN_LIST(TENGINE_DECLARE_DEVICE)
-#endif
-#undef TENGINE_DECLARE_DEVICE
-
-#define TENGINE_INVOKE_DEVICE_REG(name)                                             \
-    do                                                                              \
-    {                                                                               \
-        ret = register_##name();                                                    \
-        if (0 != ret)                                                               \
-        {                                                                           \
-            TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "register_" #name, ret); \
-        }                                                                           \
-    } while (0);
-
-#define TENGINE_INVOKE_DEVICE_UNREG(name)                                               \
-    do                                                                                  \
-    {                                                                                   \
-        ret = unregister_##name();                                                      \
-        if (0 != ret)                                                                   \
-        {                                                                               \
-            TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "unregister_" #name, ret); \
-        }                                                                               \
-    } while (0);
 
 /*!
  * @brief Register all neural network devices.
@@ -129,30 +78,66 @@ int register_all_devices(void)
 {
     int ret = 0;
 
-    TENGINE_DEVICE_LIST(TENGINE_INVOKE_DEVICE_REG)
-#ifdef TENGINE_DEVICE_ACL_LIST
-    TENGINE_DEVICE_ACL_LIST(TENGINE_INVOKE_DEVICE_REG)
+    ret = register_cpu_device();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "register_cpu_device", ret);
+    }
+#ifdef TENGINE_ENABLE_ACL
+    ret = register_acl_device();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "register_acl_device", ret);
+    }
 #endif
-#ifdef TENGINE_DEVICE_CUDA_LIST
-    TENGINE_DEVICE_CUDA_LIST(TENGINE_INVOKE_DEVICE_REG)
+#ifdef TENGINE_ENABLE_CUDA
+    ret = register_cuda_device();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "register_cuda_device", ret);
+    }
 #endif
-#ifdef TENGINE_DEVICE_OPENCL_LIST
-    TENGINE_DEVICE_OPENCL_LIST(TENGINE_INVOKE_DEVICE_REG)
+#ifdef TENGINE_ENABLE_OPENCL
+    ret = register_ocl_device();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "register_ocl_device", ret);
+    }
 #endif
-#ifdef TENGINE_DEVICE_OPENDLA_LIST
-    TENGINE_DEVICE_OPENDLA_LIST(TENGINE_INVOKE_DEVICE_REG)
+#ifdef TENGINE_ENABLE_OPENDLA
+    ret = register_odla_device();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "register_odla_device", ret);
+    }
 #endif
-#ifdef TENGINE_DEVICE_TENSORRT_LIST
-    TENGINE_DEVICE_TENSORRT_LIST(TENGINE_INVOKE_DEVICE_REG)
+#ifdef TENGINE_ENABLE_TENSORRT
+    ret = register_trt_device();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "register_trt_device", ret);
+    }
 #endif
-#ifdef TENGINE_DEVICE_TIM_VX_LIST
-    TENGINE_DEVICE_TIM_VX_LIST(TENGINE_INVOKE_DEVICE_REG)
+#ifdef TENGINE_ENABLE_TIM_VX
+    ret = register_timvx_device();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "register_timvx_device", ret);
+    }
 #endif
-#ifdef TENGINE_DEVICE_TORCH_LIST
-    TENGINE_DEVICE_TORCH_LIST(TENGINE_INVOKE_DEVICE_REG)
+#ifdef TENGINE_ENABLE_TORCH
+    ret = register_torch_device();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "register_torch_device", ret);
+    }
 #endif
-#ifdef TENGINE_DEVICE_VULKAN_LIST
-    TENGINE_DEVICE_VULKAN_LIST(TENGINE_INVOKE_DEVICE_REG)
+#ifdef TENGINE_ENABLE_VULKAN
+    ret = register_vulkan_device();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "register_vulkan_device", ret);
+    }
 #endif
 
     return ret;
@@ -167,30 +152,66 @@ int unregister_all_devices(void)
 {
     int ret = 0;
 
-    TENGINE_DEVICE_LIST(TENGINE_INVOKE_DEVICE_UNREG)
-#ifdef TENGINE_DEVICE_ACL_LIST
-    TENGINE_DEVICE_ACL_LIST(TENGINE_INVOKE_DEVICE_UNREG)
+    ret = unregister_cpu_device();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "unregister_cpu_device", ret);
+    }
+#ifdef TENGINE_ENABLE_ACL
+    ret = unregister_acl_device();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "unregister_acl_device", ret);
+    }
 #endif
-#ifdef TENGINE_DEVICE_CUDA_LIST
-    TENGINE_DEVICE_CUDA_LIST(TENGINE_INVOKE_DEVICE_UNREG)
+#ifdef TENGINE_ENABLE_CUDA
+    ret = unregister_cuda_device();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "unregister_cuda_device", ret);
+    }
 #endif
-#ifdef TENGINE_DEVICE_OPENCL_LIST
-    TENGINE_DEVICE_OPENCL_LIST(TENGINE_INVOKE_DEVICE_UNREG)
+#ifdef TENGINE_ENABLE_OPENCL
+    ret = unregister_ocl_device();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "unregister_ocl_device", ret);
+    }
 #endif
-#ifdef TENGINE_DEVICE_OPENDLA_LIST
-    TENGINE_DEVICE_OPENDLA_LIST(TENGINE_INVOKE_DEVICE_UNREG)
+#ifdef TENGINE_ENABLE_OPENDLA
+    ret = unregister_odla_device();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "unregister_odla_device", ret);
+    }
 #endif
-#ifdef TENGINE_DEVICE_TENSORRT_LIST
-    TENGINE_DEVICE_TENSORRT_LIST(TENGINE_INVOKE_DEVICE_UNREG)
+#ifdef TENGINE_ENABLE_TENSORRT
+    ret = unregister_trt_device();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "unregister_trt_device", ret);
+    }
 #endif
-#ifdef TENGINE_DEVICE_TIM_VX_LIST
-    TENGINE_DEVICE_TIM_VX_LIST(TENGINE_INVOKE_DEVICE_UNREG)
+#ifdef TENGINE_ENABLE_TIM_VX
+    ret = unregister_timvx_device();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "unregister_timvx_device", ret);
+    }
 #endif
-#ifdef TENGINE_DEVICE_TORCH_LIST
-    TENGINE_DEVICE_TORCH_LIST(TENGINE_INVOKE_DEVICE_UNREG)
+#ifdef TENGINE_ENABLE_TORCH
+    ret = unregister_torch_device();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "unregister_torch_device", ret);
+    }
 #endif
-#ifdef TENGINE_DEVICE_VULKAN_LIST
-    TENGINE_DEVICE_VULKAN_LIST(TENGINE_INVOKE_DEVICE_UNREG)
+#ifdef TENGINE_ENABLE_VULKAN
+    ret = unregister_vulkan_device();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "unregister_vulkan_device", ret);
+    }
 #endif
 
     return ret;

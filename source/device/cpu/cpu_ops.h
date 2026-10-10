@@ -26,216 +26,285 @@
 
 #include "utility/log.h"
 
-/*
- * All CPU operators are listed here. When adding a new CPU operator, append
- * one entry to the list below. The entry name is the base name of the source
- * file, whose register_<name>_op() and unregister_<name>_op() will be invoked.
- *
- * - TENGINE_CPU_REF_OP_LIST: reference implementations, always built.
- * - TENGINE_CPU_ARM_HCL_OP_LIST: ARM NEON kernels under op/<name>/cortex-a.
- * - TENGINE_CPU_CORTEX_M_OP_LIST: CMSIS kernels under op/<name>/cortex-m.
- * - TENGINE_CPU_X86_HCL_OP_LIST: x86 kernels under op/<name>/x86.
- * - TENGINE_CPU_MIPS_HCL_OP_LIST: MIPS kernels under op/<name>/mips.
- * - TENGINE_CPU_RISCV64_HCL_OP_LIST: RISC-V kernels under op/<name>/risc-v/lp64dv.
- */
 
-#define TENGINE_CPU_REF_OP_LIST(X)              \
-    X(absval_ref)                               \
-    X(add_n_ref)                                \
-    X(argmax_ref)                               \
-    X(argmin_ref)                               \
-    X(batchnorm_ref)                            \
-    X(batchtospacend_ref)                       \
-    X(bias_ref)                                 \
-    X(broadmul_ref)                             \
-    X(cast_ref)                                 \
-    X(ceil_ref)                                 \
-    X(clip_ref)                                 \
-    X(comparison_ref)                           \
-    X(concat_ref)                               \
-    X(conv_ref)                                 \
-    X(crop_ref)                                 \
-    X(deconv_ref)                               \
-    X(depthtospace_ref)                         \
-    X(detection_output_ref)                     \
-    X(detection_postprocess_ref)                \
-    X(dropout_ref)                              \
-    X(eltwise_ref)                              \
-    X(elu_ref)                                  \
-    X(embedding_ref)                            \
-    X(expand_ref)                               \
-    X(expanddims_ref)                           \
-    X(fc_ref)                                   \
-    X(flatten_ref)                              \
-    X(gather_ref)                               \
-    X(gelu_ref)                                 \
-    X(gru_ref)                                  \
-    X(hardsigmoid_ref)                          \
-    X(hardswish_ref)                            \
-    X(input_ref)                                \
-    X(instancenorm_ref)                         \
-    X(interp_ref)                               \
-    X(l2normalization_ref)                      \
-    X(l2pool_ref)                               \
-    X(layernorm_ref)                            \
-    X(logical_ref)                              \
-    X(logistic_ref)                             \
-    X(logsoftmax_ref)                           \
-    X(lrn_ref)                                  \
-    X(lstm_ref)                                 \
-    X(matmul_ref)                               \
-    X(maximum_ref)                              \
-    X(mean_ref)                                 \
-    X(minimum_ref)                              \
-    X(mish_ref)                                 \
-    X(mvn_ref)                                  \
-    X(noop_ref)                                 \
-    X(normalize_ref)                            \
-    X(pad_ref)                                  \
-    X(permute_ref)                              \
-    X(pooling_ref)                              \
-    X(prelu_ref)                                \
-    X(priorbox_ref)                             \
-    X(psroipooling_ref)                         \
-    X(reciprocal_ref)                           \
-    X(reducel2_ref)                             \
-    X(reduction_ref)                            \
-    X(region_ref)                               \
-    X(relu1_ref)                                \
-    X(relu6_ref)                                \
-    X(relu_ref)                                 \
-    X(reorg_ref)                                \
-    X(reshape_ref)                              \
-    X(resize_ref)                               \
-    X(reverse_ref)                              \
-    X(rnn_ref)                                  \
-    X(roialign_ref)                             \
-    X(roipooling_ref)                           \
-    X(round_ref)                                \
-    X(rpn_ref)                                  \
-    X(scale_ref)                                \
-    X(scatter_ref)                              \
-    X(selu_ref)                                 \
-    X(shape_ref)                                \
-    X(shuffle_channel_ref)                      \
-    X(sigmoid_ref)                              \
-    X(slice_ref)                                \
-    X(softmax_ref)                              \
-    X(softplus_ref)                             \
-    X(spacetobatchnd_ref)                       \
-    X(spacetodepth_ref)                         \
-    X(sparsetodense_ref)                        \
-    X(spatialtransformer_ref)                   \
-    X(split_ref)                                \
-    X(squareddifference_ref)                    \
-    X(squeeze_ref)                              \
-    X(strided_slice_ref)                        \
-    X(swap_axis_ref)                            \
-    X(tanh_ref)                                 \
-    X(threshold_ref)                            \
-    X(tile_ref)                                 \
-    X(topkv2_ref)                               \
-    X(transpose_ref)                            \
-    X(unary_ref)                                \
-    X(unsqueeze_ref)                            \
-    X(upsample_ref)                             \
-    X(where_ref)                                \
-    X(zeroslike_ref)
+extern int register_absval_ref_op(void);
+extern int unregister_absval_ref_op(void);
+extern int register_add_n_ref_op(void);
+extern int unregister_add_n_ref_op(void);
+extern int register_argmax_ref_op(void);
+extern int unregister_argmax_ref_op(void);
+extern int register_argmin_ref_op(void);
+extern int unregister_argmin_ref_op(void);
+extern int register_batchnorm_ref_op(void);
+extern int unregister_batchnorm_ref_op(void);
+extern int register_batchtospacend_ref_op(void);
+extern int unregister_batchtospacend_ref_op(void);
+extern int register_bias_ref_op(void);
+extern int unregister_bias_ref_op(void);
+extern int register_broadmul_ref_op(void);
+extern int unregister_broadmul_ref_op(void);
+extern int register_cast_ref_op(void);
+extern int unregister_cast_ref_op(void);
+extern int register_ceil_ref_op(void);
+extern int unregister_ceil_ref_op(void);
+extern int register_clip_ref_op(void);
+extern int unregister_clip_ref_op(void);
+extern int register_comparison_ref_op(void);
+extern int unregister_comparison_ref_op(void);
+extern int register_concat_ref_op(void);
+extern int unregister_concat_ref_op(void);
+extern int register_conv_ref_op(void);
+extern int unregister_conv_ref_op(void);
+extern int register_crop_ref_op(void);
+extern int unregister_crop_ref_op(void);
+extern int register_deconv_ref_op(void);
+extern int unregister_deconv_ref_op(void);
+extern int register_depthtospace_ref_op(void);
+extern int unregister_depthtospace_ref_op(void);
+extern int register_detection_output_ref_op(void);
+extern int unregister_detection_output_ref_op(void);
+extern int register_detection_postprocess_ref_op(void);
+extern int unregister_detection_postprocess_ref_op(void);
+extern int register_dropout_ref_op(void);
+extern int unregister_dropout_ref_op(void);
+extern int register_eltwise_ref_op(void);
+extern int unregister_eltwise_ref_op(void);
+extern int register_elu_ref_op(void);
+extern int unregister_elu_ref_op(void);
+extern int register_embedding_ref_op(void);
+extern int unregister_embedding_ref_op(void);
+extern int register_expand_ref_op(void);
+extern int unregister_expand_ref_op(void);
+extern int register_expanddims_ref_op(void);
+extern int unregister_expanddims_ref_op(void);
+extern int register_fc_ref_op(void);
+extern int unregister_fc_ref_op(void);
+extern int register_flatten_ref_op(void);
+extern int unregister_flatten_ref_op(void);
+extern int register_gather_ref_op(void);
+extern int unregister_gather_ref_op(void);
+extern int register_gelu_ref_op(void);
+extern int unregister_gelu_ref_op(void);
+extern int register_gru_ref_op(void);
+extern int unregister_gru_ref_op(void);
+extern int register_hardsigmoid_ref_op(void);
+extern int unregister_hardsigmoid_ref_op(void);
+extern int register_hardswish_ref_op(void);
+extern int unregister_hardswish_ref_op(void);
+extern int register_input_ref_op(void);
+extern int unregister_input_ref_op(void);
+extern int register_instancenorm_ref_op(void);
+extern int unregister_instancenorm_ref_op(void);
+extern int register_interp_ref_op(void);
+extern int unregister_interp_ref_op(void);
+extern int register_l2normalization_ref_op(void);
+extern int unregister_l2normalization_ref_op(void);
+extern int register_l2pool_ref_op(void);
+extern int unregister_l2pool_ref_op(void);
+extern int register_layernorm_ref_op(void);
+extern int unregister_layernorm_ref_op(void);
+extern int register_logical_ref_op(void);
+extern int unregister_logical_ref_op(void);
+extern int register_logistic_ref_op(void);
+extern int unregister_logistic_ref_op(void);
+extern int register_logsoftmax_ref_op(void);
+extern int unregister_logsoftmax_ref_op(void);
+extern int register_lrn_ref_op(void);
+extern int unregister_lrn_ref_op(void);
+extern int register_lstm_ref_op(void);
+extern int unregister_lstm_ref_op(void);
+extern int register_matmul_ref_op(void);
+extern int unregister_matmul_ref_op(void);
+extern int register_maximum_ref_op(void);
+extern int unregister_maximum_ref_op(void);
+extern int register_mean_ref_op(void);
+extern int unregister_mean_ref_op(void);
+extern int register_minimum_ref_op(void);
+extern int unregister_minimum_ref_op(void);
+extern int register_mish_ref_op(void);
+extern int unregister_mish_ref_op(void);
+extern int register_mvn_ref_op(void);
+extern int unregister_mvn_ref_op(void);
+extern int register_noop_ref_op(void);
+extern int unregister_noop_ref_op(void);
+extern int register_normalize_ref_op(void);
+extern int unregister_normalize_ref_op(void);
+extern int register_pad_ref_op(void);
+extern int unregister_pad_ref_op(void);
+extern int register_permute_ref_op(void);
+extern int unregister_permute_ref_op(void);
+extern int register_pooling_ref_op(void);
+extern int unregister_pooling_ref_op(void);
+extern int register_prelu_ref_op(void);
+extern int unregister_prelu_ref_op(void);
+extern int register_priorbox_ref_op(void);
+extern int unregister_priorbox_ref_op(void);
+extern int register_psroipooling_ref_op(void);
+extern int unregister_psroipooling_ref_op(void);
+extern int register_reciprocal_ref_op(void);
+extern int unregister_reciprocal_ref_op(void);
+extern int register_reducel2_ref_op(void);
+extern int unregister_reducel2_ref_op(void);
+extern int register_reduction_ref_op(void);
+extern int unregister_reduction_ref_op(void);
+extern int register_region_ref_op(void);
+extern int unregister_region_ref_op(void);
+extern int register_relu1_ref_op(void);
+extern int unregister_relu1_ref_op(void);
+extern int register_relu6_ref_op(void);
+extern int unregister_relu6_ref_op(void);
+extern int register_relu_ref_op(void);
+extern int unregister_relu_ref_op(void);
+extern int register_reorg_ref_op(void);
+extern int unregister_reorg_ref_op(void);
+extern int register_reshape_ref_op(void);
+extern int unregister_reshape_ref_op(void);
+extern int register_resize_ref_op(void);
+extern int unregister_resize_ref_op(void);
+extern int register_reverse_ref_op(void);
+extern int unregister_reverse_ref_op(void);
+extern int register_rnn_ref_op(void);
+extern int unregister_rnn_ref_op(void);
+extern int register_roialign_ref_op(void);
+extern int unregister_roialign_ref_op(void);
+extern int register_roipooling_ref_op(void);
+extern int unregister_roipooling_ref_op(void);
+extern int register_round_ref_op(void);
+extern int unregister_round_ref_op(void);
+extern int register_rpn_ref_op(void);
+extern int unregister_rpn_ref_op(void);
+extern int register_scale_ref_op(void);
+extern int unregister_scale_ref_op(void);
+extern int register_scatter_ref_op(void);
+extern int unregister_scatter_ref_op(void);
+extern int register_selu_ref_op(void);
+extern int unregister_selu_ref_op(void);
+extern int register_shape_ref_op(void);
+extern int unregister_shape_ref_op(void);
+extern int register_shuffle_channel_ref_op(void);
+extern int unregister_shuffle_channel_ref_op(void);
+extern int register_sigmoid_ref_op(void);
+extern int unregister_sigmoid_ref_op(void);
+extern int register_slice_ref_op(void);
+extern int unregister_slice_ref_op(void);
+extern int register_softmax_ref_op(void);
+extern int unregister_softmax_ref_op(void);
+extern int register_softplus_ref_op(void);
+extern int unregister_softplus_ref_op(void);
+extern int register_spacetobatchnd_ref_op(void);
+extern int unregister_spacetobatchnd_ref_op(void);
+extern int register_spacetodepth_ref_op(void);
+extern int unregister_spacetodepth_ref_op(void);
+extern int register_sparsetodense_ref_op(void);
+extern int unregister_sparsetodense_ref_op(void);
+extern int register_spatialtransformer_ref_op(void);
+extern int unregister_spatialtransformer_ref_op(void);
+extern int register_split_ref_op(void);
+extern int unregister_split_ref_op(void);
+extern int register_squareddifference_ref_op(void);
+extern int unregister_squareddifference_ref_op(void);
+extern int register_squeeze_ref_op(void);
+extern int unregister_squeeze_ref_op(void);
+extern int register_strided_slice_ref_op(void);
+extern int unregister_strided_slice_ref_op(void);
+extern int register_swap_axis_ref_op(void);
+extern int unregister_swap_axis_ref_op(void);
+extern int register_tanh_ref_op(void);
+extern int unregister_tanh_ref_op(void);
+extern int register_threshold_ref_op(void);
+extern int unregister_threshold_ref_op(void);
+extern int register_tile_ref_op(void);
+extern int unregister_tile_ref_op(void);
+extern int register_topkv2_ref_op(void);
+extern int unregister_topkv2_ref_op(void);
+extern int register_transpose_ref_op(void);
+extern int unregister_transpose_ref_op(void);
+extern int register_unary_ref_op(void);
+extern int unregister_unary_ref_op(void);
+extern int register_unsqueeze_ref_op(void);
+extern int unregister_unsqueeze_ref_op(void);
+extern int register_upsample_ref_op(void);
+extern int unregister_upsample_ref_op(void);
+extern int register_where_ref_op(void);
+extern int unregister_where_ref_op(void);
+extern int register_zeroslike_ref_op(void);
+extern int unregister_zeroslike_ref_op(void);
 
 /* application profile ARM, exclude M profile which is handled by CMSIS below */
 #if defined(__arm__) || defined(__aarch64__) || defined(_M_ARM) || defined(_M_ARM64)
 #if !defined(__ARM_ARCH_6M__) && !defined(__ARM_ARCH_7M__) && !defined(__ARM_ARCH_7EM__) && \
     !defined(__ARM_ARCH_8M_BASE__) && !defined(__ARM_ARCH_8M_MAIN__) && !defined(__ARM_ARCH_8_1M_MAIN__)
-#define TENGINE_CPU_ARM_HCL_OP_LIST(X)          \
-    X(absval_hcl_arm)                           \
-    X(batchnorm_hcl_arm)                        \
-    X(conv_dw_hcl_arm)                          \
-    X(conv_hcl_arm)                             \
-    X(eltwise_hcl_arm)                          \
-    X(elu_hcl_arm)                              \
-    X(fc_hcl_arm)                               \
-    X(interp_hcl_arm)                           \
-    X(lrn_hcl_arm)                              \
-    X(mish_hcl_arm)                             \
-    X(pooling_hcl_arm)                          \
-    X(relu_hcl_arm)                             \
-    X(selu_hcl_arm)                             \
-    X(sigmoid_hcl_arm)                          \
-    X(softmax_hcl_arm)                          \
-    X(tanh_hcl_arm)
+extern int register_absval_hcl_arm_op(void);
+extern int unregister_absval_hcl_arm_op(void);
+extern int register_batchnorm_hcl_arm_op(void);
+extern int unregister_batchnorm_hcl_arm_op(void);
+extern int register_conv_dw_hcl_arm_op(void);
+extern int unregister_conv_dw_hcl_arm_op(void);
+extern int register_conv_hcl_arm_op(void);
+extern int unregister_conv_hcl_arm_op(void);
+extern int register_eltwise_hcl_arm_op(void);
+extern int unregister_eltwise_hcl_arm_op(void);
+extern int register_elu_hcl_arm_op(void);
+extern int unregister_elu_hcl_arm_op(void);
+extern int register_fc_hcl_arm_op(void);
+extern int unregister_fc_hcl_arm_op(void);
+extern int register_interp_hcl_arm_op(void);
+extern int unregister_interp_hcl_arm_op(void);
+extern int register_lrn_hcl_arm_op(void);
+extern int unregister_lrn_hcl_arm_op(void);
+extern int register_mish_hcl_arm_op(void);
+extern int unregister_mish_hcl_arm_op(void);
+extern int register_pooling_hcl_arm_op(void);
+extern int unregister_pooling_hcl_arm_op(void);
+extern int register_relu_hcl_arm_op(void);
+extern int unregister_relu_hcl_arm_op(void);
+extern int register_selu_hcl_arm_op(void);
+extern int unregister_selu_hcl_arm_op(void);
+extern int register_sigmoid_hcl_arm_op(void);
+extern int unregister_sigmoid_hcl_arm_op(void);
+extern int register_softmax_hcl_arm_op(void);
+extern int unregister_softmax_hcl_arm_op(void);
+extern int register_tanh_hcl_arm_op(void);
+extern int unregister_tanh_hcl_arm_op(void);
 #endif
 #endif
 
 #if defined(__ARM_ARCH_6M__) || defined(__ARM_ARCH_7M__) || defined(__ARM_ARCH_7EM__) || \
     defined(__ARM_ARCH_8M_BASE__) || defined(__ARM_ARCH_8M_MAIN__) || defined(__ARM_ARCH_8_1M_MAIN__)
-#define TENGINE_CPU_CORTEX_M_OP_LIST(X)         \
-    X(conv_cmsis)                               \
-    X(fc_cmsis)                                 \
-    X(pooling_cmsis)                            \
-    X(relu_cmsis)                               \
-    X(softmax_cmsis)
+extern int register_conv_cmsis_op(void);
+extern int unregister_conv_cmsis_op(void);
+extern int register_fc_cmsis_op(void);
+extern int unregister_fc_cmsis_op(void);
+extern int register_pooling_cmsis_op(void);
+extern int unregister_pooling_cmsis_op(void);
+extern int register_relu_cmsis_op(void);
+extern int unregister_relu_cmsis_op(void);
+extern int register_softmax_cmsis_op(void);
+extern int unregister_softmax_cmsis_op(void);
 #endif
 
 #if defined(__i386__) || defined(__x86_64__) || defined(_M_IX86) || defined(_M_X64) || defined(_M_AMD64)
-#define TENGINE_CPU_X86_HCL_OP_LIST(X)          \
-    X(conv_dw_hcl_x86)                          \
-    X(conv_hcl_x86)                             \
-    X(fc_hcl_x86)
+extern int register_conv_dw_hcl_x86_op(void);
+extern int unregister_conv_dw_hcl_x86_op(void);
+extern int register_conv_hcl_x86_op(void);
+extern int unregister_conv_hcl_x86_op(void);
+extern int register_fc_hcl_x86_op(void);
+extern int unregister_fc_hcl_x86_op(void);
 #endif
 
 #if defined(__mips__)
-#define TENGINE_CPU_MIPS_HCL_OP_LIST(X)         \
-    X(conv_dw_hcl_mips)                         \
-    X(conv_hcl_mips)
+extern int register_conv_dw_hcl_mips_op(void);
+extern int unregister_conv_dw_hcl_mips_op(void);
+extern int register_conv_hcl_mips_op(void);
+extern int unregister_conv_hcl_mips_op(void);
 #endif
 
 #if defined(__riscv) && defined(__riscv_xlen) && (64 == __riscv_xlen)
-#define TENGINE_CPU_RISCV64_HCL_OP_LIST(X)      \
-    X(conv_dw_hcl_rv64)                         \
-    X(conv_hcl_rv64)
+extern int register_conv_dw_hcl_rv64_op(void);
+extern int unregister_conv_dw_hcl_rv64_op(void);
+extern int register_conv_hcl_rv64_op(void);
+extern int unregister_conv_hcl_rv64_op(void);
 #endif
-
-#define TENGINE_DECLARE_CPU_OP(name)            \
-    extern int register_##name##_op(void);      \
-    extern int unregister_##name##_op(void);
-
-TENGINE_CPU_REF_OP_LIST(TENGINE_DECLARE_CPU_OP)
-#ifdef TENGINE_CPU_ARM_HCL_OP_LIST
-TENGINE_CPU_ARM_HCL_OP_LIST(TENGINE_DECLARE_CPU_OP)
-#endif
-#ifdef TENGINE_CPU_CORTEX_M_OP_LIST
-TENGINE_CPU_CORTEX_M_OP_LIST(TENGINE_DECLARE_CPU_OP)
-#endif
-#ifdef TENGINE_CPU_X86_HCL_OP_LIST
-TENGINE_CPU_X86_HCL_OP_LIST(TENGINE_DECLARE_CPU_OP)
-#endif
-#ifdef TENGINE_CPU_MIPS_HCL_OP_LIST
-TENGINE_CPU_MIPS_HCL_OP_LIST(TENGINE_DECLARE_CPU_OP)
-#endif
-#ifdef TENGINE_CPU_RISCV64_HCL_OP_LIST
-TENGINE_CPU_RISCV64_HCL_OP_LIST(TENGINE_DECLARE_CPU_OP)
-#endif
-#undef TENGINE_DECLARE_CPU_OP
-
-#define TENGINE_INVOKE_CPU_REG(name)                                                        \
-    do                                                                                      \
-    {                                                                                       \
-        ret = register_##name##_op();                                                       \
-        if (0 != ret)                                                                       \
-        {                                                                                   \
-            TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "register_" #name "_op", ret); \
-        }                                                                                   \
-    } while (0);
-
-#define TENGINE_INVOKE_CPU_UNREG(name)                                                          \
-    do                                                                                          \
-    {                                                                                           \
-        ret = unregister_##name##_op();                                                         \
-        if (0 != ret)                                                                           \
-        {                                                                                       \
-            TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "unregister_" #name "_op", ret);   \
-        }                                                                                       \
-    } while (0);
 
 /*!
  * @brief Register all cpu operators.
@@ -246,21 +315,669 @@ int register_all_cpu_ops(void)
 {
     int ret = 0;
 
-    TENGINE_CPU_REF_OP_LIST(TENGINE_INVOKE_CPU_REG)
-#ifdef TENGINE_CPU_ARM_HCL_OP_LIST
-    TENGINE_CPU_ARM_HCL_OP_LIST(TENGINE_INVOKE_CPU_REG)
+    ret = register_absval_ref_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "register_absval_ref_op", ret);
+    }
+    ret = register_add_n_ref_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "register_add_n_ref_op", ret);
+    }
+    ret = register_argmax_ref_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "register_argmax_ref_op", ret);
+    }
+    ret = register_argmin_ref_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "register_argmin_ref_op", ret);
+    }
+    ret = register_batchnorm_ref_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "register_batchnorm_ref_op", ret);
+    }
+    ret = register_batchtospacend_ref_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "register_batchtospacend_ref_op", ret);
+    }
+    ret = register_bias_ref_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "register_bias_ref_op", ret);
+    }
+    ret = register_broadmul_ref_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "register_broadmul_ref_op", ret);
+    }
+    ret = register_cast_ref_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "register_cast_ref_op", ret);
+    }
+    ret = register_ceil_ref_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "register_ceil_ref_op", ret);
+    }
+    ret = register_clip_ref_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "register_clip_ref_op", ret);
+    }
+    ret = register_comparison_ref_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "register_comparison_ref_op", ret);
+    }
+    ret = register_concat_ref_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "register_concat_ref_op", ret);
+    }
+    ret = register_conv_ref_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "register_conv_ref_op", ret);
+    }
+    ret = register_crop_ref_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "register_crop_ref_op", ret);
+    }
+    ret = register_deconv_ref_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "register_deconv_ref_op", ret);
+    }
+    ret = register_depthtospace_ref_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "register_depthtospace_ref_op", ret);
+    }
+    ret = register_detection_output_ref_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "register_detection_output_ref_op", ret);
+    }
+    ret = register_detection_postprocess_ref_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "register_detection_postprocess_ref_op", ret);
+    }
+    ret = register_dropout_ref_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "register_dropout_ref_op", ret);
+    }
+    ret = register_eltwise_ref_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "register_eltwise_ref_op", ret);
+    }
+    ret = register_elu_ref_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "register_elu_ref_op", ret);
+    }
+    ret = register_embedding_ref_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "register_embedding_ref_op", ret);
+    }
+    ret = register_expand_ref_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "register_expand_ref_op", ret);
+    }
+    ret = register_expanddims_ref_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "register_expanddims_ref_op", ret);
+    }
+    ret = register_fc_ref_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "register_fc_ref_op", ret);
+    }
+    ret = register_flatten_ref_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "register_flatten_ref_op", ret);
+    }
+    ret = register_gather_ref_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "register_gather_ref_op", ret);
+    }
+    ret = register_gelu_ref_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "register_gelu_ref_op", ret);
+    }
+    ret = register_gru_ref_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "register_gru_ref_op", ret);
+    }
+    ret = register_hardsigmoid_ref_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "register_hardsigmoid_ref_op", ret);
+    }
+    ret = register_hardswish_ref_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "register_hardswish_ref_op", ret);
+    }
+    ret = register_input_ref_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "register_input_ref_op", ret);
+    }
+    ret = register_instancenorm_ref_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "register_instancenorm_ref_op", ret);
+    }
+    ret = register_interp_ref_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "register_interp_ref_op", ret);
+    }
+    ret = register_l2normalization_ref_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "register_l2normalization_ref_op", ret);
+    }
+    ret = register_l2pool_ref_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "register_l2pool_ref_op", ret);
+    }
+    ret = register_layernorm_ref_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "register_layernorm_ref_op", ret);
+    }
+    ret = register_logical_ref_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "register_logical_ref_op", ret);
+    }
+    ret = register_logistic_ref_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "register_logistic_ref_op", ret);
+    }
+    ret = register_logsoftmax_ref_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "register_logsoftmax_ref_op", ret);
+    }
+    ret = register_lrn_ref_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "register_lrn_ref_op", ret);
+    }
+    ret = register_lstm_ref_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "register_lstm_ref_op", ret);
+    }
+    ret = register_matmul_ref_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "register_matmul_ref_op", ret);
+    }
+    ret = register_maximum_ref_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "register_maximum_ref_op", ret);
+    }
+    ret = register_mean_ref_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "register_mean_ref_op", ret);
+    }
+    ret = register_minimum_ref_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "register_minimum_ref_op", ret);
+    }
+    ret = register_mish_ref_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "register_mish_ref_op", ret);
+    }
+    ret = register_mvn_ref_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "register_mvn_ref_op", ret);
+    }
+    ret = register_noop_ref_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "register_noop_ref_op", ret);
+    }
+    ret = register_normalize_ref_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "register_normalize_ref_op", ret);
+    }
+    ret = register_pad_ref_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "register_pad_ref_op", ret);
+    }
+    ret = register_permute_ref_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "register_permute_ref_op", ret);
+    }
+    ret = register_pooling_ref_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "register_pooling_ref_op", ret);
+    }
+    ret = register_prelu_ref_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "register_prelu_ref_op", ret);
+    }
+    ret = register_priorbox_ref_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "register_priorbox_ref_op", ret);
+    }
+    ret = register_psroipooling_ref_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "register_psroipooling_ref_op", ret);
+    }
+    ret = register_reciprocal_ref_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "register_reciprocal_ref_op", ret);
+    }
+    ret = register_reducel2_ref_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "register_reducel2_ref_op", ret);
+    }
+    ret = register_reduction_ref_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "register_reduction_ref_op", ret);
+    }
+    ret = register_region_ref_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "register_region_ref_op", ret);
+    }
+    ret = register_relu1_ref_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "register_relu1_ref_op", ret);
+    }
+    ret = register_relu6_ref_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "register_relu6_ref_op", ret);
+    }
+    ret = register_relu_ref_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "register_relu_ref_op", ret);
+    }
+    ret = register_reorg_ref_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "register_reorg_ref_op", ret);
+    }
+    ret = register_reshape_ref_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "register_reshape_ref_op", ret);
+    }
+    ret = register_resize_ref_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "register_resize_ref_op", ret);
+    }
+    ret = register_reverse_ref_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "register_reverse_ref_op", ret);
+    }
+    ret = register_rnn_ref_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "register_rnn_ref_op", ret);
+    }
+    ret = register_roialign_ref_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "register_roialign_ref_op", ret);
+    }
+    ret = register_roipooling_ref_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "register_roipooling_ref_op", ret);
+    }
+    ret = register_round_ref_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "register_round_ref_op", ret);
+    }
+    ret = register_rpn_ref_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "register_rpn_ref_op", ret);
+    }
+    ret = register_scale_ref_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "register_scale_ref_op", ret);
+    }
+    ret = register_scatter_ref_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "register_scatter_ref_op", ret);
+    }
+    ret = register_selu_ref_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "register_selu_ref_op", ret);
+    }
+    ret = register_shape_ref_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "register_shape_ref_op", ret);
+    }
+    ret = register_shuffle_channel_ref_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "register_shuffle_channel_ref_op", ret);
+    }
+    ret = register_sigmoid_ref_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "register_sigmoid_ref_op", ret);
+    }
+    ret = register_slice_ref_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "register_slice_ref_op", ret);
+    }
+    ret = register_softmax_ref_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "register_softmax_ref_op", ret);
+    }
+    ret = register_softplus_ref_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "register_softplus_ref_op", ret);
+    }
+    ret = register_spacetobatchnd_ref_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "register_spacetobatchnd_ref_op", ret);
+    }
+    ret = register_spacetodepth_ref_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "register_spacetodepth_ref_op", ret);
+    }
+    ret = register_sparsetodense_ref_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "register_sparsetodense_ref_op", ret);
+    }
+    ret = register_spatialtransformer_ref_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "register_spatialtransformer_ref_op", ret);
+    }
+    ret = register_split_ref_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "register_split_ref_op", ret);
+    }
+    ret = register_squareddifference_ref_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "register_squareddifference_ref_op", ret);
+    }
+    ret = register_squeeze_ref_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "register_squeeze_ref_op", ret);
+    }
+    ret = register_strided_slice_ref_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "register_strided_slice_ref_op", ret);
+    }
+    ret = register_swap_axis_ref_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "register_swap_axis_ref_op", ret);
+    }
+    ret = register_tanh_ref_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "register_tanh_ref_op", ret);
+    }
+    ret = register_threshold_ref_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "register_threshold_ref_op", ret);
+    }
+    ret = register_tile_ref_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "register_tile_ref_op", ret);
+    }
+    ret = register_topkv2_ref_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "register_topkv2_ref_op", ret);
+    }
+    ret = register_transpose_ref_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "register_transpose_ref_op", ret);
+    }
+    ret = register_unary_ref_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "register_unary_ref_op", ret);
+    }
+    ret = register_unsqueeze_ref_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "register_unsqueeze_ref_op", ret);
+    }
+    ret = register_upsample_ref_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "register_upsample_ref_op", ret);
+    }
+    ret = register_where_ref_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "register_where_ref_op", ret);
+    }
+    ret = register_zeroslike_ref_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "register_zeroslike_ref_op", ret);
+    }
+
+#if defined(__arm__) || defined(__aarch64__) || defined(_M_ARM) || defined(_M_ARM64)
+#if !defined(__ARM_ARCH_6M__) && !defined(__ARM_ARCH_7M__) && !defined(__ARM_ARCH_7EM__) && \
+    !defined(__ARM_ARCH_8M_BASE__) && !defined(__ARM_ARCH_8M_MAIN__) && !defined(__ARM_ARCH_8_1M_MAIN__)
+    ret = register_absval_hcl_arm_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "register_absval_hcl_arm_op", ret);
+    }
+    ret = register_batchnorm_hcl_arm_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "register_batchnorm_hcl_arm_op", ret);
+    }
+    ret = register_conv_dw_hcl_arm_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "register_conv_dw_hcl_arm_op", ret);
+    }
+    ret = register_conv_hcl_arm_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "register_conv_hcl_arm_op", ret);
+    }
+    ret = register_eltwise_hcl_arm_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "register_eltwise_hcl_arm_op", ret);
+    }
+    ret = register_elu_hcl_arm_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "register_elu_hcl_arm_op", ret);
+    }
+    ret = register_fc_hcl_arm_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "register_fc_hcl_arm_op", ret);
+    }
+    ret = register_interp_hcl_arm_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "register_interp_hcl_arm_op", ret);
+    }
+    ret = register_lrn_hcl_arm_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "register_lrn_hcl_arm_op", ret);
+    }
+    ret = register_mish_hcl_arm_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "register_mish_hcl_arm_op", ret);
+    }
+    ret = register_pooling_hcl_arm_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "register_pooling_hcl_arm_op", ret);
+    }
+    ret = register_relu_hcl_arm_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "register_relu_hcl_arm_op", ret);
+    }
+    ret = register_selu_hcl_arm_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "register_selu_hcl_arm_op", ret);
+    }
+    ret = register_sigmoid_hcl_arm_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "register_sigmoid_hcl_arm_op", ret);
+    }
+    ret = register_softmax_hcl_arm_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "register_softmax_hcl_arm_op", ret);
+    }
+    ret = register_tanh_hcl_arm_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "register_tanh_hcl_arm_op", ret);
+    }
 #endif
-#ifdef TENGINE_CPU_CORTEX_M_OP_LIST
-    TENGINE_CPU_CORTEX_M_OP_LIST(TENGINE_INVOKE_CPU_REG)
 #endif
-#ifdef TENGINE_CPU_X86_HCL_OP_LIST
-    TENGINE_CPU_X86_HCL_OP_LIST(TENGINE_INVOKE_CPU_REG)
+
+#if defined(__ARM_ARCH_6M__) || defined(__ARM_ARCH_7M__) || defined(__ARM_ARCH_7EM__) || \
+    defined(__ARM_ARCH_8M_BASE__) || defined(__ARM_ARCH_8M_MAIN__) || defined(__ARM_ARCH_8_1M_MAIN__)
+    ret = register_conv_cmsis_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "register_conv_cmsis_op", ret);
+    }
+    ret = register_fc_cmsis_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "register_fc_cmsis_op", ret);
+    }
+    ret = register_pooling_cmsis_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "register_pooling_cmsis_op", ret);
+    }
+    ret = register_relu_cmsis_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "register_relu_cmsis_op", ret);
+    }
+    ret = register_softmax_cmsis_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "register_softmax_cmsis_op", ret);
+    }
 #endif
-#ifdef TENGINE_CPU_MIPS_HCL_OP_LIST
-    TENGINE_CPU_MIPS_HCL_OP_LIST(TENGINE_INVOKE_CPU_REG)
+
+#if defined(__i386__) || defined(__x86_64__) || defined(_M_IX86) || defined(_M_X64) || defined(_M_AMD64)
+    ret = register_conv_dw_hcl_x86_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "register_conv_dw_hcl_x86_op", ret);
+    }
+    ret = register_conv_hcl_x86_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "register_conv_hcl_x86_op", ret);
+    }
+    ret = register_fc_hcl_x86_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "register_fc_hcl_x86_op", ret);
+    }
 #endif
-#ifdef TENGINE_CPU_RISCV64_HCL_OP_LIST
-    TENGINE_CPU_RISCV64_HCL_OP_LIST(TENGINE_INVOKE_CPU_REG)
+
+#if defined(__mips__)
+    ret = register_conv_dw_hcl_mips_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "register_conv_dw_hcl_mips_op", ret);
+    }
+    ret = register_conv_hcl_mips_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "register_conv_hcl_mips_op", ret);
+    }
+#endif
+
+#if defined(__riscv) && defined(__riscv_xlen) && (64 == __riscv_xlen)
+    ret = register_conv_dw_hcl_rv64_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "register_conv_dw_hcl_rv64_op", ret);
+    }
+    ret = register_conv_hcl_rv64_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "register_conv_hcl_rv64_op", ret);
+    }
 #endif
 
     return ret;
@@ -275,21 +992,669 @@ int unregister_all_cpu_ops(void)
 {
     int ret = 0;
 
-    TENGINE_CPU_REF_OP_LIST(TENGINE_INVOKE_CPU_UNREG)
-#ifdef TENGINE_CPU_ARM_HCL_OP_LIST
-    TENGINE_CPU_ARM_HCL_OP_LIST(TENGINE_INVOKE_CPU_UNREG)
+    ret = unregister_absval_ref_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "unregister_absval_ref_op", ret);
+    }
+    ret = unregister_add_n_ref_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "unregister_add_n_ref_op", ret);
+    }
+    ret = unregister_argmax_ref_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "unregister_argmax_ref_op", ret);
+    }
+    ret = unregister_argmin_ref_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "unregister_argmin_ref_op", ret);
+    }
+    ret = unregister_batchnorm_ref_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "unregister_batchnorm_ref_op", ret);
+    }
+    ret = unregister_batchtospacend_ref_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "unregister_batchtospacend_ref_op", ret);
+    }
+    ret = unregister_bias_ref_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "unregister_bias_ref_op", ret);
+    }
+    ret = unregister_broadmul_ref_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "unregister_broadmul_ref_op", ret);
+    }
+    ret = unregister_cast_ref_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "unregister_cast_ref_op", ret);
+    }
+    ret = unregister_ceil_ref_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "unregister_ceil_ref_op", ret);
+    }
+    ret = unregister_clip_ref_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "unregister_clip_ref_op", ret);
+    }
+    ret = unregister_comparison_ref_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "unregister_comparison_ref_op", ret);
+    }
+    ret = unregister_concat_ref_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "unregister_concat_ref_op", ret);
+    }
+    ret = unregister_conv_ref_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "unregister_conv_ref_op", ret);
+    }
+    ret = unregister_crop_ref_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "unregister_crop_ref_op", ret);
+    }
+    ret = unregister_deconv_ref_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "unregister_deconv_ref_op", ret);
+    }
+    ret = unregister_depthtospace_ref_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "unregister_depthtospace_ref_op", ret);
+    }
+    ret = unregister_detection_output_ref_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "unregister_detection_output_ref_op", ret);
+    }
+    ret = unregister_detection_postprocess_ref_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "unregister_detection_postprocess_ref_op", ret);
+    }
+    ret = unregister_dropout_ref_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "unregister_dropout_ref_op", ret);
+    }
+    ret = unregister_eltwise_ref_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "unregister_eltwise_ref_op", ret);
+    }
+    ret = unregister_elu_ref_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "unregister_elu_ref_op", ret);
+    }
+    ret = unregister_embedding_ref_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "unregister_embedding_ref_op", ret);
+    }
+    ret = unregister_expand_ref_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "unregister_expand_ref_op", ret);
+    }
+    ret = unregister_expanddims_ref_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "unregister_expanddims_ref_op", ret);
+    }
+    ret = unregister_fc_ref_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "unregister_fc_ref_op", ret);
+    }
+    ret = unregister_flatten_ref_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "unregister_flatten_ref_op", ret);
+    }
+    ret = unregister_gather_ref_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "unregister_gather_ref_op", ret);
+    }
+    ret = unregister_gelu_ref_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "unregister_gelu_ref_op", ret);
+    }
+    ret = unregister_gru_ref_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "unregister_gru_ref_op", ret);
+    }
+    ret = unregister_hardsigmoid_ref_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "unregister_hardsigmoid_ref_op", ret);
+    }
+    ret = unregister_hardswish_ref_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "unregister_hardswish_ref_op", ret);
+    }
+    ret = unregister_input_ref_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "unregister_input_ref_op", ret);
+    }
+    ret = unregister_instancenorm_ref_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "unregister_instancenorm_ref_op", ret);
+    }
+    ret = unregister_interp_ref_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "unregister_interp_ref_op", ret);
+    }
+    ret = unregister_l2normalization_ref_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "unregister_l2normalization_ref_op", ret);
+    }
+    ret = unregister_l2pool_ref_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "unregister_l2pool_ref_op", ret);
+    }
+    ret = unregister_layernorm_ref_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "unregister_layernorm_ref_op", ret);
+    }
+    ret = unregister_logical_ref_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "unregister_logical_ref_op", ret);
+    }
+    ret = unregister_logistic_ref_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "unregister_logistic_ref_op", ret);
+    }
+    ret = unregister_logsoftmax_ref_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "unregister_logsoftmax_ref_op", ret);
+    }
+    ret = unregister_lrn_ref_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "unregister_lrn_ref_op", ret);
+    }
+    ret = unregister_lstm_ref_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "unregister_lstm_ref_op", ret);
+    }
+    ret = unregister_matmul_ref_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "unregister_matmul_ref_op", ret);
+    }
+    ret = unregister_maximum_ref_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "unregister_maximum_ref_op", ret);
+    }
+    ret = unregister_mean_ref_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "unregister_mean_ref_op", ret);
+    }
+    ret = unregister_minimum_ref_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "unregister_minimum_ref_op", ret);
+    }
+    ret = unregister_mish_ref_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "unregister_mish_ref_op", ret);
+    }
+    ret = unregister_mvn_ref_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "unregister_mvn_ref_op", ret);
+    }
+    ret = unregister_noop_ref_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "unregister_noop_ref_op", ret);
+    }
+    ret = unregister_normalize_ref_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "unregister_normalize_ref_op", ret);
+    }
+    ret = unregister_pad_ref_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "unregister_pad_ref_op", ret);
+    }
+    ret = unregister_permute_ref_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "unregister_permute_ref_op", ret);
+    }
+    ret = unregister_pooling_ref_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "unregister_pooling_ref_op", ret);
+    }
+    ret = unregister_prelu_ref_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "unregister_prelu_ref_op", ret);
+    }
+    ret = unregister_priorbox_ref_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "unregister_priorbox_ref_op", ret);
+    }
+    ret = unregister_psroipooling_ref_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "unregister_psroipooling_ref_op", ret);
+    }
+    ret = unregister_reciprocal_ref_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "unregister_reciprocal_ref_op", ret);
+    }
+    ret = unregister_reducel2_ref_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "unregister_reducel2_ref_op", ret);
+    }
+    ret = unregister_reduction_ref_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "unregister_reduction_ref_op", ret);
+    }
+    ret = unregister_region_ref_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "unregister_region_ref_op", ret);
+    }
+    ret = unregister_relu1_ref_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "unregister_relu1_ref_op", ret);
+    }
+    ret = unregister_relu6_ref_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "unregister_relu6_ref_op", ret);
+    }
+    ret = unregister_relu_ref_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "unregister_relu_ref_op", ret);
+    }
+    ret = unregister_reorg_ref_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "unregister_reorg_ref_op", ret);
+    }
+    ret = unregister_reshape_ref_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "unregister_reshape_ref_op", ret);
+    }
+    ret = unregister_resize_ref_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "unregister_resize_ref_op", ret);
+    }
+    ret = unregister_reverse_ref_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "unregister_reverse_ref_op", ret);
+    }
+    ret = unregister_rnn_ref_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "unregister_rnn_ref_op", ret);
+    }
+    ret = unregister_roialign_ref_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "unregister_roialign_ref_op", ret);
+    }
+    ret = unregister_roipooling_ref_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "unregister_roipooling_ref_op", ret);
+    }
+    ret = unregister_round_ref_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "unregister_round_ref_op", ret);
+    }
+    ret = unregister_rpn_ref_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "unregister_rpn_ref_op", ret);
+    }
+    ret = unregister_scale_ref_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "unregister_scale_ref_op", ret);
+    }
+    ret = unregister_scatter_ref_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "unregister_scatter_ref_op", ret);
+    }
+    ret = unregister_selu_ref_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "unregister_selu_ref_op", ret);
+    }
+    ret = unregister_shape_ref_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "unregister_shape_ref_op", ret);
+    }
+    ret = unregister_shuffle_channel_ref_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "unregister_shuffle_channel_ref_op", ret);
+    }
+    ret = unregister_sigmoid_ref_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "unregister_sigmoid_ref_op", ret);
+    }
+    ret = unregister_slice_ref_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "unregister_slice_ref_op", ret);
+    }
+    ret = unregister_softmax_ref_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "unregister_softmax_ref_op", ret);
+    }
+    ret = unregister_softplus_ref_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "unregister_softplus_ref_op", ret);
+    }
+    ret = unregister_spacetobatchnd_ref_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "unregister_spacetobatchnd_ref_op", ret);
+    }
+    ret = unregister_spacetodepth_ref_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "unregister_spacetodepth_ref_op", ret);
+    }
+    ret = unregister_sparsetodense_ref_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "unregister_sparsetodense_ref_op", ret);
+    }
+    ret = unregister_spatialtransformer_ref_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "unregister_spatialtransformer_ref_op", ret);
+    }
+    ret = unregister_split_ref_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "unregister_split_ref_op", ret);
+    }
+    ret = unregister_squareddifference_ref_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "unregister_squareddifference_ref_op", ret);
+    }
+    ret = unregister_squeeze_ref_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "unregister_squeeze_ref_op", ret);
+    }
+    ret = unregister_strided_slice_ref_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "unregister_strided_slice_ref_op", ret);
+    }
+    ret = unregister_swap_axis_ref_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "unregister_swap_axis_ref_op", ret);
+    }
+    ret = unregister_tanh_ref_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "unregister_tanh_ref_op", ret);
+    }
+    ret = unregister_threshold_ref_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "unregister_threshold_ref_op", ret);
+    }
+    ret = unregister_tile_ref_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "unregister_tile_ref_op", ret);
+    }
+    ret = unregister_topkv2_ref_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "unregister_topkv2_ref_op", ret);
+    }
+    ret = unregister_transpose_ref_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "unregister_transpose_ref_op", ret);
+    }
+    ret = unregister_unary_ref_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "unregister_unary_ref_op", ret);
+    }
+    ret = unregister_unsqueeze_ref_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "unregister_unsqueeze_ref_op", ret);
+    }
+    ret = unregister_upsample_ref_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "unregister_upsample_ref_op", ret);
+    }
+    ret = unregister_where_ref_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "unregister_where_ref_op", ret);
+    }
+    ret = unregister_zeroslike_ref_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "unregister_zeroslike_ref_op", ret);
+    }
+
+#if defined(__arm__) || defined(__aarch64__) || defined(_M_ARM) || defined(_M_ARM64)
+#if !defined(__ARM_ARCH_6M__) && !defined(__ARM_ARCH_7M__) && !defined(__ARM_ARCH_7EM__) && \
+    !defined(__ARM_ARCH_8M_BASE__) && !defined(__ARM_ARCH_8M_MAIN__) && !defined(__ARM_ARCH_8_1M_MAIN__)
+    ret = unregister_absval_hcl_arm_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "unregister_absval_hcl_arm_op", ret);
+    }
+    ret = unregister_batchnorm_hcl_arm_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "unregister_batchnorm_hcl_arm_op", ret);
+    }
+    ret = unregister_conv_dw_hcl_arm_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "unregister_conv_dw_hcl_arm_op", ret);
+    }
+    ret = unregister_conv_hcl_arm_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "unregister_conv_hcl_arm_op", ret);
+    }
+    ret = unregister_eltwise_hcl_arm_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "unregister_eltwise_hcl_arm_op", ret);
+    }
+    ret = unregister_elu_hcl_arm_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "unregister_elu_hcl_arm_op", ret);
+    }
+    ret = unregister_fc_hcl_arm_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "unregister_fc_hcl_arm_op", ret);
+    }
+    ret = unregister_interp_hcl_arm_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "unregister_interp_hcl_arm_op", ret);
+    }
+    ret = unregister_lrn_hcl_arm_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "unregister_lrn_hcl_arm_op", ret);
+    }
+    ret = unregister_mish_hcl_arm_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "unregister_mish_hcl_arm_op", ret);
+    }
+    ret = unregister_pooling_hcl_arm_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "unregister_pooling_hcl_arm_op", ret);
+    }
+    ret = unregister_relu_hcl_arm_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "unregister_relu_hcl_arm_op", ret);
+    }
+    ret = unregister_selu_hcl_arm_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "unregister_selu_hcl_arm_op", ret);
+    }
+    ret = unregister_sigmoid_hcl_arm_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "unregister_sigmoid_hcl_arm_op", ret);
+    }
+    ret = unregister_softmax_hcl_arm_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "unregister_softmax_hcl_arm_op", ret);
+    }
+    ret = unregister_tanh_hcl_arm_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "unregister_tanh_hcl_arm_op", ret);
+    }
 #endif
-#ifdef TENGINE_CPU_CORTEX_M_OP_LIST
-    TENGINE_CPU_CORTEX_M_OP_LIST(TENGINE_INVOKE_CPU_UNREG)
 #endif
-#ifdef TENGINE_CPU_X86_HCL_OP_LIST
-    TENGINE_CPU_X86_HCL_OP_LIST(TENGINE_INVOKE_CPU_UNREG)
+
+#if defined(__ARM_ARCH_6M__) || defined(__ARM_ARCH_7M__) || defined(__ARM_ARCH_7EM__) || \
+    defined(__ARM_ARCH_8M_BASE__) || defined(__ARM_ARCH_8M_MAIN__) || defined(__ARM_ARCH_8_1M_MAIN__)
+    ret = unregister_conv_cmsis_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "unregister_conv_cmsis_op", ret);
+    }
+    ret = unregister_fc_cmsis_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "unregister_fc_cmsis_op", ret);
+    }
+    ret = unregister_pooling_cmsis_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "unregister_pooling_cmsis_op", ret);
+    }
+    ret = unregister_relu_cmsis_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "unregister_relu_cmsis_op", ret);
+    }
+    ret = unregister_softmax_cmsis_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "unregister_softmax_cmsis_op", ret);
+    }
 #endif
-#ifdef TENGINE_CPU_MIPS_HCL_OP_LIST
-    TENGINE_CPU_MIPS_HCL_OP_LIST(TENGINE_INVOKE_CPU_UNREG)
+
+#if defined(__i386__) || defined(__x86_64__) || defined(_M_IX86) || defined(_M_X64) || defined(_M_AMD64)
+    ret = unregister_conv_dw_hcl_x86_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "unregister_conv_dw_hcl_x86_op", ret);
+    }
+    ret = unregister_conv_hcl_x86_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "unregister_conv_hcl_x86_op", ret);
+    }
+    ret = unregister_fc_hcl_x86_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "unregister_fc_hcl_x86_op", ret);
+    }
 #endif
-#ifdef TENGINE_CPU_RISCV64_HCL_OP_LIST
-    TENGINE_CPU_RISCV64_HCL_OP_LIST(TENGINE_INVOKE_CPU_UNREG)
+
+#if defined(__mips__)
+    ret = unregister_conv_dw_hcl_mips_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "unregister_conv_dw_hcl_mips_op", ret);
+    }
+    ret = unregister_conv_hcl_mips_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "unregister_conv_hcl_mips_op", ret);
+    }
+#endif
+
+#if defined(__riscv) && defined(__riscv_xlen) && (64 == __riscv_xlen)
+    ret = unregister_conv_dw_hcl_rv64_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "unregister_conv_dw_hcl_rv64_op", ret);
+    }
+    ret = unregister_conv_hcl_rv64_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "unregister_conv_hcl_rv64_op", ret);
+    }
 #endif
 
     return 0;

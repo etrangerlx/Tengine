@@ -18,8 +18,9 @@
             "args": [
                 "-S","..",
                 "-DCMAKE_BUILD_TYPE=Debug",
+                "-DCMAKE_EXPORT_COMPILE_COMMANDS=ON",
                 "-DTENGINE_BUILD_CONVERT_TOOL=ON",
-                "-DTENGINE_ENABLE_OPENCL=ON"
+                "-DTENGINE_ENABLE_OPENCL=OFF"
             ],
             "options": {
                 "cwd": "${workspaceFolder}/build",

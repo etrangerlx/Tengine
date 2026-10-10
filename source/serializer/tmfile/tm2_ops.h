@@ -26,130 +26,207 @@
 
 #include "utility/log.h"
 
-/*
- * All tm2 op loaders are listed here. When adding a new op loader under
- * source/serializer/tmfile/op, append one entry to the list below. The
- * entry name is the base name of the source file, whose
- * register_<name>_op() and unregister_<name>_op() will be invoked.
- */
-#define TENGINE_TM2_OPS_LIST(X)                 \
-    X(tm2_add_n)                                \
-    X(tm2_argmax)                               \
-    X(tm2_argmin)                               \
-    X(tm2_batchnorm)                            \
-    X(tm2_batchtospacend)                       \
-    X(tm2_bias)                                 \
-    X(tm2_broadmul)                             \
-    X(tm2_cast)                                 \
-    X(tm2_ceil)                                 \
-    X(tm2_clip)                                 \
-    X(tm2_comparison)                           \
-    X(tm2_concat)                               \
-    X(tm2_conv)                                 \
-    X(tm2_crop)                                 \
-    X(tm2_deconv)                               \
-    X(tm2_depthtospace)                         \
-    X(tm2_detection_output)                     \
-    X(tm2_detection_postprocess)                \
-    X(tm2_dropout)                              \
-    X(tm2_eltwise)                              \
-    X(tm2_elu)                                  \
-    X(tm2_embedding)                            \
-    X(tm2_expand)                               \
-    X(tm2_expanddims)                           \
-    X(tm2_fc)                                   \
-    X(tm2_flatten)                              \
-    X(tm2_gather)                               \
-    X(tm2_gelu)                                 \
-    X(tm2_gemm)                                 \
-    X(tm2_generic)                              \
-    X(tm2_gru)                                  \
-    X(tm2_hardsigmoid)                          \
-    X(tm2_hardswish)                            \
-    X(tm2_instancenorm)                         \
-    X(tm2_interp)                               \
-    X(tm2_l2normalization)                      \
-    X(tm2_l2pool)                               \
-    X(tm2_layernorm)                            \
-    X(tm2_logical)                              \
-    X(tm2_logistic)                             \
-    X(tm2_logsoftmax)                           \
-    X(tm2_lrn)                                  \
-    X(tm2_lstm)                                 \
-    X(tm2_matmul)                               \
-    X(tm2_maximum)                              \
-    X(tm2_mean)                                 \
-    X(tm2_mish)                                 \
-    X(tm2_mvn)                                  \
-    X(tm2_noop)                                 \
-    X(tm2_normalize)                            \
-    X(tm2_pad)                                  \
-    X(tm2_permute)                              \
-    X(tm2_pool)                                 \
-    X(tm2_prelu)                                \
-    X(tm2_priorbox)                             \
-    X(tm2_psroipooling)                         \
-    X(tm2_reciprocal)                           \
-    X(tm2_reducel2)                             \
-    X(tm2_reduction)                            \
-    X(tm2_region)                               \
-    X(tm2_relu)                                 \
-    X(tm2_relu1)                                \
-    X(tm2_relu6)                                \
-    X(tm2_reorg)                                \
-    X(tm2_reshape)                              \
-    X(tm2_resize)                               \
-    X(tm2_reverse)                              \
-    X(tm2_rnn)                                  \
-    X(tm2_roialign)                             \
-    X(tm2_roipooling)                           \
-    X(tm2_round)                                \
-    X(tm2_rpn)                                  \
-    X(tm2_scale)                                \
-    X(tm2_scatter)                              \
-    X(tm2_selu)                                 \
-    X(tm2_shape)                                \
-    X(tm2_shuffle_channel)                      \
-    X(tm2_sigmoid)                              \
-    X(tm2_slice)                                \
-    X(tm2_softmax)                              \
-    X(tm2_softplus)                             \
-    X(tm2_spacetobatchnd)                       \
-    X(tm2_spacetodepth)                         \
-    X(tm2_sparsetodense)                        \
-    X(tm2_spatialtransformer)                   \
-    X(tm2_split)                                \
-    X(tm2_squareddifference)                    \
-    X(tm2_squeeze)                              \
-    X(tm2_strided_slice)                        \
-    X(tm2_swap_axis)                            \
-    X(tm2_tanh)                                 \
-    X(tm2_threshold)                            \
-    X(tm2_tile)                                 \
-    X(tm2_topkv2)                               \
-    X(tm2_transpose)                            \
-    X(tm2_unary)                                \
-    X(tm2_unsqueeze)                            \
-    X(tm2_upsample)                             \
-    X(tm2_where)                                \
-    X(tm2_zeroslike)
 
-#define TENGINE_DECLARE_TM2_OP(name)            \
-    extern int register_##name##_op(void);      \
-    extern int unregister_##name##_op(void);
-
-TENGINE_TM2_OPS_LIST(TENGINE_DECLARE_TM2_OP)
-#undef TENGINE_DECLARE_TM2_OP
-
-#define TENGINE_INVOKE_TM2_REG(name)                                                        \
-    do                                                                                      \
-    {                                                                                       \
-        ret = register_##name##_op();                                                       \
-        if (0 != ret)                                                                       \
-        {                                                                                   \
-            TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "register_" #name "_op", ret); \
-        }                                                                                   \
-    } while (0);
+extern int register_tm2_add_n_op(void);
+extern int unregister_tm2_add_n_op(void);
+extern int register_tm2_argmax_op(void);
+extern int unregister_tm2_argmax_op(void);
+extern int register_tm2_argmin_op(void);
+extern int unregister_tm2_argmin_op(void);
+extern int register_tm2_batchnorm_op(void);
+extern int unregister_tm2_batchnorm_op(void);
+extern int register_tm2_batchtospacend_op(void);
+extern int unregister_tm2_batchtospacend_op(void);
+extern int register_tm2_bias_op(void);
+extern int unregister_tm2_bias_op(void);
+extern int register_tm2_broadmul_op(void);
+extern int unregister_tm2_broadmul_op(void);
+extern int register_tm2_cast_op(void);
+extern int unregister_tm2_cast_op(void);
+extern int register_tm2_ceil_op(void);
+extern int unregister_tm2_ceil_op(void);
+extern int register_tm2_clip_op(void);
+extern int unregister_tm2_clip_op(void);
+extern int register_tm2_comparison_op(void);
+extern int unregister_tm2_comparison_op(void);
+extern int register_tm2_concat_op(void);
+extern int unregister_tm2_concat_op(void);
+extern int register_tm2_conv_op(void);
+extern int unregister_tm2_conv_op(void);
+extern int register_tm2_crop_op(void);
+extern int unregister_tm2_crop_op(void);
+extern int register_tm2_deconv_op(void);
+extern int unregister_tm2_deconv_op(void);
+extern int register_tm2_depthtospace_op(void);
+extern int unregister_tm2_depthtospace_op(void);
+extern int register_tm2_detection_output_op(void);
+extern int unregister_tm2_detection_output_op(void);
+extern int register_tm2_detection_postprocess_op(void);
+extern int unregister_tm2_detection_postprocess_op(void);
+extern int register_tm2_dropout_op(void);
+extern int unregister_tm2_dropout_op(void);
+extern int register_tm2_eltwise_op(void);
+extern int unregister_tm2_eltwise_op(void);
+extern int register_tm2_elu_op(void);
+extern int unregister_tm2_elu_op(void);
+extern int register_tm2_embedding_op(void);
+extern int unregister_tm2_embedding_op(void);
+extern int register_tm2_expand_op(void);
+extern int unregister_tm2_expand_op(void);
+extern int register_tm2_expanddims_op(void);
+extern int unregister_tm2_expanddims_op(void);
+extern int register_tm2_fc_op(void);
+extern int unregister_tm2_fc_op(void);
+extern int register_tm2_flatten_op(void);
+extern int unregister_tm2_flatten_op(void);
+extern int register_tm2_gather_op(void);
+extern int unregister_tm2_gather_op(void);
+extern int register_tm2_gelu_op(void);
+extern int unregister_tm2_gelu_op(void);
+extern int register_tm2_gemm_op(void);
+extern int unregister_tm2_gemm_op(void);
+extern int register_tm2_generic_op(void);
+extern int unregister_tm2_generic_op(void);
+extern int register_tm2_gru_op(void);
+extern int unregister_tm2_gru_op(void);
+extern int register_tm2_hardsigmoid_op(void);
+extern int unregister_tm2_hardsigmoid_op(void);
+extern int register_tm2_hardswish_op(void);
+extern int unregister_tm2_hardswish_op(void);
+extern int register_tm2_instancenorm_op(void);
+extern int unregister_tm2_instancenorm_op(void);
+extern int register_tm2_interp_op(void);
+extern int unregister_tm2_interp_op(void);
+extern int register_tm2_l2normalization_op(void);
+extern int unregister_tm2_l2normalization_op(void);
+extern int register_tm2_l2pool_op(void);
+extern int unregister_tm2_l2pool_op(void);
+extern int register_tm2_layernorm_op(void);
+extern int unregister_tm2_layernorm_op(void);
+extern int register_tm2_logical_op(void);
+extern int unregister_tm2_logical_op(void);
+extern int register_tm2_logistic_op(void);
+extern int unregister_tm2_logistic_op(void);
+extern int register_tm2_logsoftmax_op(void);
+extern int unregister_tm2_logsoftmax_op(void);
+extern int register_tm2_lrn_op(void);
+extern int unregister_tm2_lrn_op(void);
+extern int register_tm2_lstm_op(void);
+extern int unregister_tm2_lstm_op(void);
+extern int register_tm2_matmul_op(void);
+extern int unregister_tm2_matmul_op(void);
+extern int register_tm2_maximum_op(void);
+extern int unregister_tm2_maximum_op(void);
+extern int register_tm2_mean_op(void);
+extern int unregister_tm2_mean_op(void);
+extern int register_tm2_mish_op(void);
+extern int unregister_tm2_mish_op(void);
+extern int register_tm2_mvn_op(void);
+extern int unregister_tm2_mvn_op(void);
+extern int register_tm2_noop_op(void);
+extern int unregister_tm2_noop_op(void);
+extern int register_tm2_normalize_op(void);
+extern int unregister_tm2_normalize_op(void);
+extern int register_tm2_pad_op(void);
+extern int unregister_tm2_pad_op(void);
+extern int register_tm2_permute_op(void);
+extern int unregister_tm2_permute_op(void);
+extern int register_tm2_pool_op(void);
+extern int unregister_tm2_pool_op(void);
+extern int register_tm2_prelu_op(void);
+extern int unregister_tm2_prelu_op(void);
+extern int register_tm2_priorbox_op(void);
+extern int unregister_tm2_priorbox_op(void);
+extern int register_tm2_psroipooling_op(void);
+extern int unregister_tm2_psroipooling_op(void);
+extern int register_tm2_reciprocal_op(void);
+extern int unregister_tm2_reciprocal_op(void);
+extern int register_tm2_reducel2_op(void);
+extern int unregister_tm2_reducel2_op(void);
+extern int register_tm2_reduction_op(void);
+extern int unregister_tm2_reduction_op(void);
+extern int register_tm2_region_op(void);
+extern int unregister_tm2_region_op(void);
+extern int register_tm2_relu_op(void);
+extern int unregister_tm2_relu_op(void);
+extern int register_tm2_relu1_op(void);
+extern int unregister_tm2_relu1_op(void);
+extern int register_tm2_relu6_op(void);
+extern int unregister_tm2_relu6_op(void);
+extern int register_tm2_reorg_op(void);
+extern int unregister_tm2_reorg_op(void);
+extern int register_tm2_reshape_op(void);
+extern int unregister_tm2_reshape_op(void);
+extern int register_tm2_resize_op(void);
+extern int unregister_tm2_resize_op(void);
+extern int register_tm2_reverse_op(void);
+extern int unregister_tm2_reverse_op(void);
+extern int register_tm2_rnn_op(void);
+extern int unregister_tm2_rnn_op(void);
+extern int register_tm2_roialign_op(void);
+extern int unregister_tm2_roialign_op(void);
+extern int register_tm2_roipooling_op(void);
+extern int unregister_tm2_roipooling_op(void);
+extern int register_tm2_round_op(void);
+extern int unregister_tm2_round_op(void);
+extern int register_tm2_rpn_op(void);
+extern int unregister_tm2_rpn_op(void);
+extern int register_tm2_scale_op(void);
+extern int unregister_tm2_scale_op(void);
+extern int register_tm2_scatter_op(void);
+extern int unregister_tm2_scatter_op(void);
+extern int register_tm2_selu_op(void);
+extern int unregister_tm2_selu_op(void);
+extern int register_tm2_shape_op(void);
+extern int unregister_tm2_shape_op(void);
+extern int register_tm2_shuffle_channel_op(void);
+extern int unregister_tm2_shuffle_channel_op(void);
+extern int register_tm2_sigmoid_op(void);
+extern int unregister_tm2_sigmoid_op(void);
+extern int register_tm2_slice_op(void);
+extern int unregister_tm2_slice_op(void);
+extern int register_tm2_softmax_op(void);
+extern int unregister_tm2_softmax_op(void);
+extern int register_tm2_softplus_op(void);
+extern int unregister_tm2_softplus_op(void);
+extern int register_tm2_spacetobatchnd_op(void);
+extern int unregister_tm2_spacetobatchnd_op(void);
+extern int register_tm2_spacetodepth_op(void);
+extern int unregister_tm2_spacetodepth_op(void);
+extern int register_tm2_sparsetodense_op(void);
+extern int unregister_tm2_sparsetodense_op(void);
+extern int register_tm2_spatialtransformer_op(void);
+extern int unregister_tm2_spatialtransformer_op(void);
+extern int register_tm2_split_op(void);
+extern int unregister_tm2_split_op(void);
+extern int register_tm2_squareddifference_op(void);
+extern int unregister_tm2_squareddifference_op(void);
+extern int register_tm2_squeeze_op(void);
+extern int unregister_tm2_squeeze_op(void);
+extern int register_tm2_strided_slice_op(void);
+extern int unregister_tm2_strided_slice_op(void);
+extern int register_tm2_swap_axis_op(void);
+extern int unregister_tm2_swap_axis_op(void);
+extern int register_tm2_tanh_op(void);
+extern int unregister_tm2_tanh_op(void);
+extern int register_tm2_threshold_op(void);
+extern int unregister_tm2_threshold_op(void);
+extern int register_tm2_tile_op(void);
+extern int unregister_tm2_tile_op(void);
+extern int register_tm2_topkv2_op(void);
+extern int unregister_tm2_topkv2_op(void);
+extern int register_tm2_transpose_op(void);
+extern int unregister_tm2_transpose_op(void);
+extern int register_tm2_unary_op(void);
+extern int unregister_tm2_unary_op(void);
+extern int register_tm2_unsqueeze_op(void);
+extern int unregister_tm2_unsqueeze_op(void);
+extern int register_tm2_upsample_op(void);
+extern int unregister_tm2_upsample_op(void);
+extern int register_tm2_where_op(void);
+extern int unregister_tm2_where_op(void);
+extern int register_tm2_zeroslike_op(void);
+extern int unregister_tm2_zeroslike_op(void);
 
 /*!
  * @brief Register all serializer.
@@ -160,20 +237,509 @@ int register_all_tm2_ops(void)
 {
     int ret = 0;
 
-    TENGINE_TM2_OPS_LIST(TENGINE_INVOKE_TM2_REG)
+    ret = register_tm2_add_n_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "register_tm2_add_n_op", ret);
+    }
+    ret = register_tm2_argmax_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "register_tm2_argmax_op", ret);
+    }
+    ret = register_tm2_argmin_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "register_tm2_argmin_op", ret);
+    }
+    ret = register_tm2_batchnorm_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "register_tm2_batchnorm_op", ret);
+    }
+    ret = register_tm2_batchtospacend_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "register_tm2_batchtospacend_op", ret);
+    }
+    ret = register_tm2_bias_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "register_tm2_bias_op", ret);
+    }
+    ret = register_tm2_broadmul_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "register_tm2_broadmul_op", ret);
+    }
+    ret = register_tm2_cast_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "register_tm2_cast_op", ret);
+    }
+    ret = register_tm2_ceil_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "register_tm2_ceil_op", ret);
+    }
+    ret = register_tm2_clip_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "register_tm2_clip_op", ret);
+    }
+    ret = register_tm2_comparison_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "register_tm2_comparison_op", ret);
+    }
+    ret = register_tm2_concat_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "register_tm2_concat_op", ret);
+    }
+    ret = register_tm2_conv_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "register_tm2_conv_op", ret);
+    }
+    ret = register_tm2_crop_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "register_tm2_crop_op", ret);
+    }
+    ret = register_tm2_deconv_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "register_tm2_deconv_op", ret);
+    }
+    ret = register_tm2_depthtospace_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "register_tm2_depthtospace_op", ret);
+    }
+    ret = register_tm2_detection_output_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "register_tm2_detection_output_op", ret);
+    }
+    ret = register_tm2_detection_postprocess_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "register_tm2_detection_postprocess_op", ret);
+    }
+    ret = register_tm2_dropout_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "register_tm2_dropout_op", ret);
+    }
+    ret = register_tm2_eltwise_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "register_tm2_eltwise_op", ret);
+    }
+    ret = register_tm2_elu_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "register_tm2_elu_op", ret);
+    }
+    ret = register_tm2_embedding_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "register_tm2_embedding_op", ret);
+    }
+    ret = register_tm2_expand_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "register_tm2_expand_op", ret);
+    }
+    ret = register_tm2_expanddims_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "register_tm2_expanddims_op", ret);
+    }
+    ret = register_tm2_fc_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "register_tm2_fc_op", ret);
+    }
+    ret = register_tm2_flatten_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "register_tm2_flatten_op", ret);
+    }
+    ret = register_tm2_gather_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "register_tm2_gather_op", ret);
+    }
+    ret = register_tm2_gelu_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "register_tm2_gelu_op", ret);
+    }
+    ret = register_tm2_gemm_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "register_tm2_gemm_op", ret);
+    }
+    ret = register_tm2_generic_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "register_tm2_generic_op", ret);
+    }
+    ret = register_tm2_gru_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "register_tm2_gru_op", ret);
+    }
+    ret = register_tm2_hardsigmoid_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "register_tm2_hardsigmoid_op", ret);
+    }
+    ret = register_tm2_hardswish_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "register_tm2_hardswish_op", ret);
+    }
+    ret = register_tm2_instancenorm_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "register_tm2_instancenorm_op", ret);
+    }
+    ret = register_tm2_interp_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "register_tm2_interp_op", ret);
+    }
+    ret = register_tm2_l2normalization_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "register_tm2_l2normalization_op", ret);
+    }
+    ret = register_tm2_l2pool_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "register_tm2_l2pool_op", ret);
+    }
+    ret = register_tm2_layernorm_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "register_tm2_layernorm_op", ret);
+    }
+    ret = register_tm2_logical_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "register_tm2_logical_op", ret);
+    }
+    ret = register_tm2_logistic_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "register_tm2_logistic_op", ret);
+    }
+    ret = register_tm2_logsoftmax_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "register_tm2_logsoftmax_op", ret);
+    }
+    ret = register_tm2_lrn_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "register_tm2_lrn_op", ret);
+    }
+    ret = register_tm2_lstm_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "register_tm2_lstm_op", ret);
+    }
+    ret = register_tm2_matmul_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "register_tm2_matmul_op", ret);
+    }
+    ret = register_tm2_maximum_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "register_tm2_maximum_op", ret);
+    }
+    ret = register_tm2_mean_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "register_tm2_mean_op", ret);
+    }
+    ret = register_tm2_mish_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "register_tm2_mish_op", ret);
+    }
+    ret = register_tm2_mvn_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "register_tm2_mvn_op", ret);
+    }
+    ret = register_tm2_noop_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "register_tm2_noop_op", ret);
+    }
+    ret = register_tm2_normalize_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "register_tm2_normalize_op", ret);
+    }
+    ret = register_tm2_pad_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "register_tm2_pad_op", ret);
+    }
+    ret = register_tm2_permute_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "register_tm2_permute_op", ret);
+    }
+    ret = register_tm2_pool_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "register_tm2_pool_op", ret);
+    }
+    ret = register_tm2_prelu_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "register_tm2_prelu_op", ret);
+    }
+    ret = register_tm2_priorbox_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "register_tm2_priorbox_op", ret);
+    }
+    ret = register_tm2_psroipooling_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "register_tm2_psroipooling_op", ret);
+    }
+    ret = register_tm2_reciprocal_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "register_tm2_reciprocal_op", ret);
+    }
+    ret = register_tm2_reducel2_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "register_tm2_reducel2_op", ret);
+    }
+    ret = register_tm2_reduction_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "register_tm2_reduction_op", ret);
+    }
+    ret = register_tm2_region_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "register_tm2_region_op", ret);
+    }
+    ret = register_tm2_relu_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "register_tm2_relu_op", ret);
+    }
+    ret = register_tm2_relu1_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "register_tm2_relu1_op", ret);
+    }
+    ret = register_tm2_relu6_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "register_tm2_relu6_op", ret);
+    }
+    ret = register_tm2_reorg_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "register_tm2_reorg_op", ret);
+    }
+    ret = register_tm2_reshape_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "register_tm2_reshape_op", ret);
+    }
+    ret = register_tm2_resize_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "register_tm2_resize_op", ret);
+    }
+    ret = register_tm2_reverse_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "register_tm2_reverse_op", ret);
+    }
+    ret = register_tm2_rnn_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "register_tm2_rnn_op", ret);
+    }
+    ret = register_tm2_roialign_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "register_tm2_roialign_op", ret);
+    }
+    ret = register_tm2_roipooling_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "register_tm2_roipooling_op", ret);
+    }
+    ret = register_tm2_round_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "register_tm2_round_op", ret);
+    }
+    ret = register_tm2_rpn_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "register_tm2_rpn_op", ret);
+    }
+    ret = register_tm2_scale_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "register_tm2_scale_op", ret);
+    }
+    ret = register_tm2_scatter_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "register_tm2_scatter_op", ret);
+    }
+    ret = register_tm2_selu_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "register_tm2_selu_op", ret);
+    }
+    ret = register_tm2_shape_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "register_tm2_shape_op", ret);
+    }
+    ret = register_tm2_shuffle_channel_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "register_tm2_shuffle_channel_op", ret);
+    }
+    ret = register_tm2_sigmoid_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "register_tm2_sigmoid_op", ret);
+    }
+    ret = register_tm2_slice_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "register_tm2_slice_op", ret);
+    }
+    ret = register_tm2_softmax_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "register_tm2_softmax_op", ret);
+    }
+    ret = register_tm2_softplus_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "register_tm2_softplus_op", ret);
+    }
+    ret = register_tm2_spacetobatchnd_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "register_tm2_spacetobatchnd_op", ret);
+    }
+    ret = register_tm2_spacetodepth_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "register_tm2_spacetodepth_op", ret);
+    }
+    ret = register_tm2_sparsetodense_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "register_tm2_sparsetodense_op", ret);
+    }
+    ret = register_tm2_spatialtransformer_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "register_tm2_spatialtransformer_op", ret);
+    }
+    ret = register_tm2_split_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "register_tm2_split_op", ret);
+    }
+    ret = register_tm2_squareddifference_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "register_tm2_squareddifference_op", ret);
+    }
+    ret = register_tm2_squeeze_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "register_tm2_squeeze_op", ret);
+    }
+    ret = register_tm2_strided_slice_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "register_tm2_strided_slice_op", ret);
+    }
+    ret = register_tm2_swap_axis_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "register_tm2_swap_axis_op", ret);
+    }
+    ret = register_tm2_tanh_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "register_tm2_tanh_op", ret);
+    }
+    ret = register_tm2_threshold_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "register_tm2_threshold_op", ret);
+    }
+    ret = register_tm2_tile_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "register_tm2_tile_op", ret);
+    }
+    ret = register_tm2_topkv2_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "register_tm2_topkv2_op", ret);
+    }
+    ret = register_tm2_transpose_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "register_tm2_transpose_op", ret);
+    }
+    ret = register_tm2_unary_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "register_tm2_unary_op", ret);
+    }
+    ret = register_tm2_unsqueeze_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "register_tm2_unsqueeze_op", ret);
+    }
+    ret = register_tm2_upsample_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "register_tm2_upsample_op", ret);
+    }
+    ret = register_tm2_where_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "register_tm2_where_op", ret);
+    }
+    ret = register_tm2_zeroslike_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "register_tm2_zeroslike_op", ret);
+    }
 
     return 0;
 }
-
-#define TENGINE_INVOKE_TM2_UNREG(name)                                                          \
-    do                                                                                          \
-    {                                                                                           \
-        ret = unregister_##name##_op();                                                         \
-        if (0 != ret)                                                                           \
-        {                                                                                       \
-            TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "unregister_" #name "_op", ret);   \
-        }                                                                                       \
-    } while (0);
 
 /*!
  * @brief unregister all serializer.
@@ -184,7 +750,506 @@ int unregister_all_tm2_ops(void)
 {
     int ret = 0;
 
-    TENGINE_TM2_OPS_LIST(TENGINE_INVOKE_TM2_UNREG)
+    ret = unregister_tm2_add_n_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "unregister_tm2_add_n_op", ret);
+    }
+    ret = unregister_tm2_argmax_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "unregister_tm2_argmax_op", ret);
+    }
+    ret = unregister_tm2_argmin_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "unregister_tm2_argmin_op", ret);
+    }
+    ret = unregister_tm2_batchnorm_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "unregister_tm2_batchnorm_op", ret);
+    }
+    ret = unregister_tm2_batchtospacend_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "unregister_tm2_batchtospacend_op", ret);
+    }
+    ret = unregister_tm2_bias_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "unregister_tm2_bias_op", ret);
+    }
+    ret = unregister_tm2_broadmul_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "unregister_tm2_broadmul_op", ret);
+    }
+    ret = unregister_tm2_cast_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "unregister_tm2_cast_op", ret);
+    }
+    ret = unregister_tm2_ceil_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "unregister_tm2_ceil_op", ret);
+    }
+    ret = unregister_tm2_clip_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "unregister_tm2_clip_op", ret);
+    }
+    ret = unregister_tm2_comparison_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "unregister_tm2_comparison_op", ret);
+    }
+    ret = unregister_tm2_concat_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "unregister_tm2_concat_op", ret);
+    }
+    ret = unregister_tm2_conv_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "unregister_tm2_conv_op", ret);
+    }
+    ret = unregister_tm2_crop_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "unregister_tm2_crop_op", ret);
+    }
+    ret = unregister_tm2_deconv_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "unregister_tm2_deconv_op", ret);
+    }
+    ret = unregister_tm2_depthtospace_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "unregister_tm2_depthtospace_op", ret);
+    }
+    ret = unregister_tm2_detection_output_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "unregister_tm2_detection_output_op", ret);
+    }
+    ret = unregister_tm2_detection_postprocess_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "unregister_tm2_detection_postprocess_op", ret);
+    }
+    ret = unregister_tm2_dropout_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "unregister_tm2_dropout_op", ret);
+    }
+    ret = unregister_tm2_eltwise_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "unregister_tm2_eltwise_op", ret);
+    }
+    ret = unregister_tm2_elu_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "unregister_tm2_elu_op", ret);
+    }
+    ret = unregister_tm2_embedding_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "unregister_tm2_embedding_op", ret);
+    }
+    ret = unregister_tm2_expand_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "unregister_tm2_expand_op", ret);
+    }
+    ret = unregister_tm2_expanddims_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "unregister_tm2_expanddims_op", ret);
+    }
+    ret = unregister_tm2_fc_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "unregister_tm2_fc_op", ret);
+    }
+    ret = unregister_tm2_flatten_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "unregister_tm2_flatten_op", ret);
+    }
+    ret = unregister_tm2_gather_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "unregister_tm2_gather_op", ret);
+    }
+    ret = unregister_tm2_gelu_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "unregister_tm2_gelu_op", ret);
+    }
+    ret = unregister_tm2_gemm_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "unregister_tm2_gemm_op", ret);
+    }
+    ret = unregister_tm2_generic_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "unregister_tm2_generic_op", ret);
+    }
+    ret = unregister_tm2_gru_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "unregister_tm2_gru_op", ret);
+    }
+    ret = unregister_tm2_hardsigmoid_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "unregister_tm2_hardsigmoid_op", ret);
+    }
+    ret = unregister_tm2_hardswish_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "unregister_tm2_hardswish_op", ret);
+    }
+    ret = unregister_tm2_instancenorm_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "unregister_tm2_instancenorm_op", ret);
+    }
+    ret = unregister_tm2_interp_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "unregister_tm2_interp_op", ret);
+    }
+    ret = unregister_tm2_l2normalization_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "unregister_tm2_l2normalization_op", ret);
+    }
+    ret = unregister_tm2_l2pool_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "unregister_tm2_l2pool_op", ret);
+    }
+    ret = unregister_tm2_layernorm_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "unregister_tm2_layernorm_op", ret);
+    }
+    ret = unregister_tm2_logical_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "unregister_tm2_logical_op", ret);
+    }
+    ret = unregister_tm2_logistic_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "unregister_tm2_logistic_op", ret);
+    }
+    ret = unregister_tm2_logsoftmax_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "unregister_tm2_logsoftmax_op", ret);
+    }
+    ret = unregister_tm2_lrn_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "unregister_tm2_lrn_op", ret);
+    }
+    ret = unregister_tm2_lstm_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "unregister_tm2_lstm_op", ret);
+    }
+    ret = unregister_tm2_matmul_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "unregister_tm2_matmul_op", ret);
+    }
+    ret = unregister_tm2_maximum_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "unregister_tm2_maximum_op", ret);
+    }
+    ret = unregister_tm2_mean_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "unregister_tm2_mean_op", ret);
+    }
+    ret = unregister_tm2_mish_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "unregister_tm2_mish_op", ret);
+    }
+    ret = unregister_tm2_mvn_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "unregister_tm2_mvn_op", ret);
+    }
+    ret = unregister_tm2_noop_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "unregister_tm2_noop_op", ret);
+    }
+    ret = unregister_tm2_normalize_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "unregister_tm2_normalize_op", ret);
+    }
+    ret = unregister_tm2_pad_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "unregister_tm2_pad_op", ret);
+    }
+    ret = unregister_tm2_permute_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "unregister_tm2_permute_op", ret);
+    }
+    ret = unregister_tm2_pool_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "unregister_tm2_pool_op", ret);
+    }
+    ret = unregister_tm2_prelu_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "unregister_tm2_prelu_op", ret);
+    }
+    ret = unregister_tm2_priorbox_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "unregister_tm2_priorbox_op", ret);
+    }
+    ret = unregister_tm2_psroipooling_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "unregister_tm2_psroipooling_op", ret);
+    }
+    ret = unregister_tm2_reciprocal_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "unregister_tm2_reciprocal_op", ret);
+    }
+    ret = unregister_tm2_reducel2_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "unregister_tm2_reducel2_op", ret);
+    }
+    ret = unregister_tm2_reduction_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "unregister_tm2_reduction_op", ret);
+    }
+    ret = unregister_tm2_region_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "unregister_tm2_region_op", ret);
+    }
+    ret = unregister_tm2_relu_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "unregister_tm2_relu_op", ret);
+    }
+    ret = unregister_tm2_relu1_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "unregister_tm2_relu1_op", ret);
+    }
+    ret = unregister_tm2_relu6_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "unregister_tm2_relu6_op", ret);
+    }
+    ret = unregister_tm2_reorg_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "unregister_tm2_reorg_op", ret);
+    }
+    ret = unregister_tm2_reshape_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "unregister_tm2_reshape_op", ret);
+    }
+    ret = unregister_tm2_resize_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "unregister_tm2_resize_op", ret);
+    }
+    ret = unregister_tm2_reverse_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "unregister_tm2_reverse_op", ret);
+    }
+    ret = unregister_tm2_rnn_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "unregister_tm2_rnn_op", ret);
+    }
+    ret = unregister_tm2_roialign_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "unregister_tm2_roialign_op", ret);
+    }
+    ret = unregister_tm2_roipooling_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "unregister_tm2_roipooling_op", ret);
+    }
+    ret = unregister_tm2_round_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "unregister_tm2_round_op", ret);
+    }
+    ret = unregister_tm2_rpn_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "unregister_tm2_rpn_op", ret);
+    }
+    ret = unregister_tm2_scale_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "unregister_tm2_scale_op", ret);
+    }
+    ret = unregister_tm2_scatter_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "unregister_tm2_scatter_op", ret);
+    }
+    ret = unregister_tm2_selu_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "unregister_tm2_selu_op", ret);
+    }
+    ret = unregister_tm2_shape_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "unregister_tm2_shape_op", ret);
+    }
+    ret = unregister_tm2_shuffle_channel_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "unregister_tm2_shuffle_channel_op", ret);
+    }
+    ret = unregister_tm2_sigmoid_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "unregister_tm2_sigmoid_op", ret);
+    }
+    ret = unregister_tm2_slice_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "unregister_tm2_slice_op", ret);
+    }
+    ret = unregister_tm2_softmax_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "unregister_tm2_softmax_op", ret);
+    }
+    ret = unregister_tm2_softplus_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "unregister_tm2_softplus_op", ret);
+    }
+    ret = unregister_tm2_spacetobatchnd_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "unregister_tm2_spacetobatchnd_op", ret);
+    }
+    ret = unregister_tm2_spacetodepth_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "unregister_tm2_spacetodepth_op", ret);
+    }
+    ret = unregister_tm2_sparsetodense_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "unregister_tm2_sparsetodense_op", ret);
+    }
+    ret = unregister_tm2_spatialtransformer_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "unregister_tm2_spatialtransformer_op", ret);
+    }
+    ret = unregister_tm2_split_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "unregister_tm2_split_op", ret);
+    }
+    ret = unregister_tm2_squareddifference_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "unregister_tm2_squareddifference_op", ret);
+    }
+    ret = unregister_tm2_squeeze_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "unregister_tm2_squeeze_op", ret);
+    }
+    ret = unregister_tm2_strided_slice_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "unregister_tm2_strided_slice_op", ret);
+    }
+    ret = unregister_tm2_swap_axis_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "unregister_tm2_swap_axis_op", ret);
+    }
+    ret = unregister_tm2_tanh_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "unregister_tm2_tanh_op", ret);
+    }
+    ret = unregister_tm2_threshold_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "unregister_tm2_threshold_op", ret);
+    }
+    ret = unregister_tm2_tile_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "unregister_tm2_tile_op", ret);
+    }
+    ret = unregister_tm2_topkv2_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "unregister_tm2_topkv2_op", ret);
+    }
+    ret = unregister_tm2_transpose_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "unregister_tm2_transpose_op", ret);
+    }
+    ret = unregister_tm2_unary_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "unregister_tm2_unary_op", ret);
+    }
+    ret = unregister_tm2_unsqueeze_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "unregister_tm2_unsqueeze_op", ret);
+    }
+    ret = unregister_tm2_upsample_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "unregister_tm2_upsample_op", ret);
+    }
+    ret = unregister_tm2_where_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "unregister_tm2_where_op", ret);
+    }
+    ret = unregister_tm2_zeroslike_op();
+    if (0 != ret)
+    {
+        TLOG_ERR("Tengine FATAL: Call %s failed(%d).\n", "unregister_tm2_zeroslike_op", ret);
+    }
 
     return 0;
 }

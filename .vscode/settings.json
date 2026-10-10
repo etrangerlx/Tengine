@@ -1,3 +1,11 @@
 {
-    "python-envs.pythonProjects": []
+    "python-envs.pythonProjects": [],
+    "C_Cpp.default.compileCommands": "${workspaceFolder}/compile_commands.json",
+    "C_Cpp.intelliSenseCacheSize": 5120,
+    "clangd.arguments": [
+        "--compile-commands-dir=${workspaceFolder}",
+        "--header-insertion=iwyu",
+        "--completion-style=bundled",
+        "--pch-storage=memory"
+    ]
 }

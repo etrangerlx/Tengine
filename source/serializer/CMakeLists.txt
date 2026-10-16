@@ -19,30 +19,30 @@
 #
 # Serializer module: multi-framework model parsers, tmfile format
 
-SET (_SRL_SRC_ROOT "${CMAKE_SOURCE_DIR}/source/serializer")
-SET (_SRL_BIN_ROOT "${CMAKE_BINARY_DIR}/source/serializer")
+set (_SRL_SRC_ROOT "${CMAKE_SOURCE_DIR}/source/serializer")
+set (_SRL_BIN_ROOT "${CMAKE_BINARY_DIR}/source/serializer")
 
 # serializer framework and tmfile parser source files (explicit list, add new files here)
-SET (_SRL_LEVEL_SOURCE
+set (_SRL_LEVEL_SOURCE
     "${_SRL_SRC_ROOT}/serializer.c"
     "${_SRL_SRC_ROOT}/tmfile/tm2_serializer.c"
 )
 
 # tmfile per-op parameter parsers: one source file per operator, plugin style.
 # CONFIGURE_DEPENDS keeps the glob re-evaluated on rebuild.
-FILE (GLOB _SRL_TM2_OPS_SOURCE CONFIGURE_DEPENDS "${_SRL_SRC_ROOT}/tmfile/op/*.c")
+file (GLOB _SRL_TM2_OPS_SOURCE CONFIGURE_DEPENDS "${_SRL_SRC_ROOT}/tmfile/op/*.c")
 
 
 # legacy variable export, kept for compatibility
-SET (TENGINE_SERIALIZER_HEADER_PATH "${_SRL_SRC_ROOT}" "${_SRL_BIN_ROOT}" CACHE INTERNAL "Tengine serializer level header searching path" FORCE)
-SET (TENGINE_SERIALIZER_SOURCE      ${_SRL_LEVEL_SOURCE} ${_SRL_TM2_OPS_SOURCE}     CACHE INTERNAL "Tengine serializer level source files"           FORCE)
+set (TENGINE_SERIALIZER_HEADER_PATH "${_SRL_SRC_ROOT}" "${_SRL_BIN_ROOT}" CACHE INTERNAL "Tengine serializer level header searching path" FORCE)
+set (TENGINE_SERIALIZER_SOURCE      ${_SRL_LEVEL_SOURCE} ${_SRL_TM2_OPS_SOURCE}     CACHE INTERNAL "Tengine serializer level source files"           FORCE)
 
 
 # IDE source groups
-TENGINE_SOURCE_GROUP ("serializer"          ${_SRL_LEVEL_SOURCE})
-TENGINE_SOURCE_GROUP ("serializer/tmfile/op" ${_SRL_TM2_OPS_SOURCE})
+tengine_source_group ("serializer"          ${_SRL_LEVEL_SOURCE})
+tengine_source_group ("serializer/tmfile/op" ${_SRL_TM2_OPS_SOURCE})
 
 
 # module target
-ADD_LIBRARY (tengine_core_serializer OBJECT ${_SRL_LEVEL_SOURCE} ${_SRL_TM2_OPS_SOURCE})
-TARGET_LINK_LIBRARIES (tengine_core_serializer PRIVATE tengine_build_config tengine_public_include)
+add_library (tengine_core_serializer OBJECT ${_SRL_LEVEL_SOURCE} ${_SRL_TM2_OPS_SOURCE})
+target_link_libraries (tengine_core_serializer PRIVATE tengine_build_config tengine_public_include)

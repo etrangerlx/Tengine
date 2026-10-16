@@ -19,7 +19,7 @@
 # Author: lswang@openailab.com
 #
 
-IF (TENGINE_ENABLE_TORCH)
+if (TENGINE_ENABLE_TORCH)
      find_package(Torch REQUIRED)
 
     message(STATUS "Torch library status:")
@@ -27,4 +27,4 @@ IF (TENGINE_ENABLE_TORCH)
     message(STATUS "    libraries: ${TORCH_LIBS}")
     message(STATUS "    include path: ${TORCH_INCLUDE_DIRS}")
     message(STATUS "    torch lib: ${TORCH_LIBRARIES}")
-ENDIF()
+endif()

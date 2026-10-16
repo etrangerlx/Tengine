@@ -20,33 +20,33 @@
 #
 
 # generate tengine header file
-FILE (MAKE_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/tengine)
-FILE (COPY ${CMAKE_SOURCE_DIR}/source/api/c_api.h DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/tengine)
+file (MAKE_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/tengine)
+file (COPY ${CMAKE_SOURCE_DIR}/source/api/c_api.h DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/tengine)
 
 
 # examples function
-FUNCTION (TENGINE_BENCHMARK name)
-    ADD_EXECUTABLE (${name})
+function (TENGINE_BENCHMARK name)
+    add_executable (${name})
 
     # add common source file
-    TARGET_SOURCES (${name} PRIVATE common/timer.cc)
+    target_sources (${name} PRIVATE common/timer.cc)
 
     # add source files
-    FOREACH (_VAR ${ARGN})
-        TARGET_SOURCES (${name} PRIVATE ${_VAR})
-    ENDFOREACH()
+    foreach (_VAR ${ARGN})
+        target_sources (${name} PRIVATE ${_VAR})
+    endforeach()
 
     # header file path
-    TARGET_INCLUDE_DIRECTORIES (${name} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
-    TARGET_INCLUDE_DIRECTORIES (${name} PRIVATE ${CMAKE_CURRENT_BINARY_DIR})
+    target_include_directories (${name} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
+    target_include_directories (${name} PRIVATE ${CMAKE_CURRENT_BINARY_DIR})
 
     # add linking library
-    TARGET_LINK_LIBRARIES (${name} PRIVATE ${CMAKE_PROJECT_NAME})
+    target_link_libraries (${name} PRIVATE ${CMAKE_PROJECT_NAME})
 
     # add to a virtual project group
-    SET_PROPERTY(TARGET ${name} PROPERTY FOLDER "benchmark")
-ENDFUNCTION()
+    set_property(TARGET ${name} PROPERTY FOLDER "benchmark")
+endfunction()
 
 
 # add benchmark
-TENGINE_BENCHMARK (tm_benchmark      tm_benchmark.cc)
+tengine_benchmark (tm_benchmark      tm_benchmark.cc)

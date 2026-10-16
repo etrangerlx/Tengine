@@ -19,28 +19,28 @@
 # Author: lswang@openailab.com
 #
 
-IF (TENGINE_ENABLE_CUDA OR TENGINE_ENABLE_TENSORRT)
-    IF (${CMAKE_MINOR_VERSION} LESS 17)
-        MESSAGE (FATAL_ERROR "Tengine: Backend needs CMake version >= 3.17.")
-    ENDIF()
+if (TENGINE_ENABLE_CUDA OR TENGINE_ENABLE_TENSORRT)
+    if (${CMAKE_MINOR_VERSION} LESS 17)
+        message (FATAL_ERROR "Tengine: Backend needs CMake version >= 3.17.")
+    endif()
 
-    FIND_PACKAGE(CUDAToolkit REQUIRED)
+    find_package(CUDAToolkit REQUIRED)
 
-    SET (CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_SOURCE_DIR}/cmake/modules)
-    FIND_PACKAGE(CUDNN REQUIRED)
-ENDIF()
+    set (CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_SOURCE_DIR}/cmake/modules)
+    find_package(CUDNN REQUIRED)
+endif()
 
-IF (TENGINE_ENABLE_CUDA)
+if (TENGINE_ENABLE_CUDA)
     # enable language CUDA
-    SET (CMAKE_CUDA_COMPILER ${CUDAToolkit_NVCC_EXECUTABLE})
+    set (CMAKE_CUDA_COMPILER ${CUDAToolkit_NVCC_EXECUTABLE})
 
-    INCLUDE (CheckLanguage)
-    CHECK_LANGUAGE (CUDA)
+    include (CheckLanguage)
+    check_language (CUDA)
 
-    IF (CMAKE_CUDA_COMPILER)
-        ENABLE_LANGUAGE(CUDA)
-    ELSE()
-        MESSAGE (WARNING "Tengine: To enable CUDA backend, \"CMAKE_CUDA_HOST_COMPILER\" must be set.")
-        MESSAGE (FATAL_ERROR "Tengine: Cannot find nvcc from any CUDA version.")
-    ENDIF()
-ENDIF()
+    if (CMAKE_CUDA_COMPILER)
+        enable_language(CUDA)
+    else()
+        message (WARNING "Tengine: To enable CUDA backend, \"CMAKE_CUDA_HOST_COMPILER\" must be set.")
+        message (FATAL_ERROR "Tengine: Cannot find nvcc from any CUDA version.")
+    endif()
+endif()

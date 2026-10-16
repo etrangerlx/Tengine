@@ -28,101 +28,101 @@
 # libraries plus the source files of not-yet-migrated backend plugins.
 
 # set target name
-IF (NOT DEFINED TENGINE_LITE_NAME)
-    SET (TENGINE_LITE_NAME ${CMAKE_PROJECT_NAME} CACHE INTERNAL "" FORCE)
-ENDIF()
+if (NOT DEFINED TENGINE_LITE_NAME)
+    set (TENGINE_LITE_NAME ${CMAKE_PROJECT_NAME} CACHE INTERNAL "" FORCE)
+endif()
 
 
 # clear all legacy aggregation variables
-UNSET (TENGINE_C_API_SOURCE)
-UNSET (TENGINE_COMMON_DEFINES)
-UNSET (TENGINE_COMMON_OPTIONS)
-UNSET (TENGINE_COMMON_LINKER_OPTIONS)
-UNSET (TENGINE_COMMON_LINK_LIBRARIES)
-UNSET (TENGINE_SOURCE_FILES)
-UNSET (TENGINE_HEADER_PATH)
-UNSET (TENGINE_LINK_PATH)
-UNSET (TENGINE_COMPILER_DEFINES)
-UNSET (TENGINE_COMPILER_OPTIONS)
-UNSET (TENGINE_LINKER_OPTIONS)
-UNSET (TENGINE_LINK_LIBRARIES)
-UNSET (TENGINE_ENABLED_OPENMP)
-UNSET (TENGINE_OBJECT_TARGETS)
+unset (TENGINE_C_API_SOURCE)
+unset (TENGINE_COMMON_DEFINES)
+unset (TENGINE_COMMON_OPTIONS)
+unset (TENGINE_COMMON_LINKER_OPTIONS)
+unset (TENGINE_COMMON_LINK_LIBRARIES)
+unset (TENGINE_SOURCE_FILES)
+unset (TENGINE_HEADER_PATH)
+unset (TENGINE_LINK_PATH)
+unset (TENGINE_COMPILER_DEFINES)
+unset (TENGINE_COMPILER_OPTIONS)
+unset (TENGINE_LINKER_OPTIONS)
+unset (TENGINE_LINK_LIBRARIES)
+unset (TENGINE_ENABLED_OPENMP)
+unset (TENGINE_OBJECT_TARGETS)
 
 
 # ---------------------------------------------------------------------------
 # common build configuration
 # ---------------------------------------------------------------------------
-IF (TENGINE_SYSTEM_MACOS)
-    LIST (APPEND TENGINE_COMMON_DEFINES "MACOS")
-ENDIF()
+if (TENGINE_SYSTEM_MACOS)
+    list (APPEND TENGINE_COMMON_DEFINES "MACOS")
+endif()
 
-IF (OHOS)
-    LIST (APPEND TENGINE_COMMON_DEFINES "_OHOS_")
+if (OHOS)
+    list (APPEND TENGINE_COMMON_DEFINES "_OHOS_")
 
     # OHOS 3.0.0.80 patch for ASM language
-    IF (NOT DEFINED CMAKE_ASM_COMPILER_TARGET)
-        SET (CMAKE_ASM_COMPILER_TARGET ${OHOS_LLVM})
-    ENDIF()
+    if (NOT DEFINED CMAKE_ASM_COMPILER_TARGET)
+        set (CMAKE_ASM_COMPILER_TARGET ${OHOS_LLVM})
+    endif()
 
-    IF (CMAKE_SYSTEM_NAME MATCHES "Windows")
-        SET (CMAKE_BUILD_WITH_INSTALL_RPATH ON)
-    ENDIF()
-ENDIF()
+    if (CMAKE_SYSTEM_NAME MATCHES "Windows")
+        set (CMAKE_BUILD_WITH_INSTALL_RPATH ON)
+    endif()
+endif()
 
-IF (TENGINE_COMPILER_GCC OR TENGINE_COMPILER_CLANG)
-    IF (${TENGINE_FULL_CHECK})
+if (TENGINE_COMPILER_GCC OR TENGINE_COMPILER_CLANG)
+    if (${TENGINE_FULL_CHECK})
         # warning local redefined same name variable
-        LIST (APPEND TENGINE_COMMON_OPTIONS "-Wshadow")
-        LIST (APPEND TENGINE_COMMON_OPTIONS "-Wunreachable-code")
+        list (APPEND TENGINE_COMMON_OPTIONS "-Wshadow")
+        list (APPEND TENGINE_COMMON_OPTIONS "-Wunreachable-code")
         #LIST (APPEND TENGINE_COMMON_OPTIONS "-Werror")
 
         # show all warnings
-        LIST (APPEND TENGINE_COMMON_OPTIONS "-Wall")
+        list (APPEND TENGINE_COMMON_OPTIONS "-Wall")
 
         # more warning details
-        LIST (APPEND TENGINE_COMMON_OPTIONS "-Wextra")
+        list (APPEND TENGINE_COMMON_OPTIONS "-Wextra")
 
         # warning all unused part
-        LIST (APPEND TENGINE_COMMON_OPTIONS "-Wunknown-pragmas")
-        LIST (APPEND TENGINE_COMMON_OPTIONS "-Wunused-label")
-        LIST (APPEND TENGINE_COMMON_OPTIONS "-Wunused-value")
-        LIST (APPEND TENGINE_COMMON_OPTIONS "-Wunused-function")
-        LIST (APPEND TENGINE_COMMON_OPTIONS "-Wunused-variable")
+        list (APPEND TENGINE_COMMON_OPTIONS "-Wunknown-pragmas")
+        list (APPEND TENGINE_COMMON_OPTIONS "-Wunused-label")
+        list (APPEND TENGINE_COMMON_OPTIONS "-Wunused-value")
+        list (APPEND TENGINE_COMMON_OPTIONS "-Wunused-function")
+        list (APPEND TENGINE_COMMON_OPTIONS "-Wunused-variable")
 
         # check memory issues
-        LIST (APPEND TENGINE_COMMON_OPTIONS "-fsanitize=address")
-        LIST (APPEND TENGINE_COMMON_OPTIONS "-fno-omit-frame-pointer")
+        list (APPEND TENGINE_COMMON_OPTIONS "-fsanitize=address")
+        list (APPEND TENGINE_COMMON_OPTIONS "-fno-omit-frame-pointer")
 
-        LIST (APPEND TENGINE_COMMON_LINKER_OPTIONS "-fsanitize=address")
-    ENDIF()
+        list (APPEND TENGINE_COMMON_LINKER_OPTIONS "-fsanitize=address")
+    endif()
 
-    IF ((${CMAKE_BUILD_TYPE} MATCHES "Debug") OR (${CMAKE_BUILD_TYPE} MATCHES "DEBUG"))
-        LIST (APPEND TENGINE_COMMON_OPTIONS "-g")
-        LIST (APPEND TENGINE_COMMON_OPTIONS "-O0")
-    ELSEIF (TENGINE_GENERATE_DEBUG_SYMBOL)
-        LIST (APPEND TENGINE_COMMON_OPTIONS "-g")
-    ENDIF()
+    if ((${CMAKE_BUILD_TYPE} MATCHES "Debug") OR (${CMAKE_BUILD_TYPE} MATCHES "DEBUG"))
+        list (APPEND TENGINE_COMMON_OPTIONS "-g")
+        list (APPEND TENGINE_COMMON_OPTIONS "-O0")
+    elseif (TENGINE_GENERATE_DEBUG_SYMBOL)
+        list (APPEND TENGINE_COMMON_OPTIONS "-g")
+    endif()
 
-    IF (${TENGINE_COVERAGE})
-        LIST (APPEND TENGINE_COMMON_OPTIONS "-fprofile-arcs")
-        LIST (APPEND TENGINE_COMMON_OPTIONS "-ftest-coverage")
+    if (${TENGINE_COVERAGE})
+        list (APPEND TENGINE_COMMON_OPTIONS "-fprofile-arcs")
+        list (APPEND TENGINE_COMMON_OPTIONS "-ftest-coverage")
 
-        LIST (APPEND TENGINE_COMMON_LINK_LIBRARIES -coverage)
-        LIST (APPEND TENGINE_COMMON_LINK_LIBRARIES -lgcov)
-    ENDIF()
+        list (APPEND TENGINE_COMMON_LINK_LIBRARIES -coverage)
+        list (APPEND TENGINE_COMMON_LINK_LIBRARIES -lgcov)
+    endif()
 
-    IF (ANDROID)
-        LIST (APPEND TENGINE_COMMON_LINK_LIBRARIES android)
-        LIST (APPEND TENGINE_COMMON_LINK_LIBRARIES log)
-    ELSEIF (OHOS)
-        LIST (APPEND TENGINE_COMMON_LINK_LIBRARIES dl)
-        LIST (APPEND TENGINE_COMMON_LINK_LIBRARIES m)
-    ELSEIF (NOT MSVC)
-        LIST (APPEND TENGINE_COMMON_LINK_LIBRARIES dl)
-        LIST (APPEND TENGINE_COMMON_LINK_LIBRARIES m)
-    ENDIF()
-ENDIF()
+    if (ANDROID)
+        list (APPEND TENGINE_COMMON_LINK_LIBRARIES android)
+        list (APPEND TENGINE_COMMON_LINK_LIBRARIES log)
+    elseif (OHOS)
+        list (APPEND TENGINE_COMMON_LINK_LIBRARIES dl)
+        list (APPEND TENGINE_COMMON_LINK_LIBRARIES m)
+    elseif (NOT MSVC)
+        list (APPEND TENGINE_COMMON_LINK_LIBRARIES dl)
+        list (APPEND TENGINE_COMMON_LINK_LIBRARIES m)
+    endif()
+endif()
 
 
 # ---------------------------------------------------------------------------
@@ -131,20 +131,20 @@ ENDIF()
 # tengine_build_config: common defines, compile and link options.
 # modules link it PRIVATE, the final targets link it PRIVATE as well so the
 # configuration never leaks into consumer build interfaces
-ADD_LIBRARY (tengine_build_config INTERFACE)
-IF (TENGINE_ONLINE_REPORT AND NOT MSVC)
-    LIST (APPEND TENGINE_COMMON_DEFINES "TENGINE_ONLINE_REPORT=1")
-ENDIF()
-TARGET_COMPILE_DEFINITIONS (tengine_build_config INTERFACE ${TENGINE_COMMON_DEFINES})
-TARGET_COMPILE_OPTIONS (tengine_build_config INTERFACE ${TENGINE_COMMON_OPTIONS})
-TARGET_LINK_LIBRARIES (tengine_build_config INTERFACE ${TENGINE_COMMON_LINK_LIBRARIES})
-TARGET_LINK_OPTIONS (tengine_build_config INTERFACE ${TENGINE_COMMON_LINKER_OPTIONS})
+add_library (tengine_build_config INTERFACE)
+if (TENGINE_ONLINE_REPORT AND NOT MSVC)
+    list (APPEND TENGINE_COMMON_DEFINES "TENGINE_ONLINE_REPORT=1")
+endif()
+target_compile_definitions (tengine_build_config INTERFACE ${TENGINE_COMMON_DEFINES})
+target_compile_options (tengine_build_config INTERFACE ${TENGINE_COMMON_OPTIONS})
+target_link_libraries (tengine_build_config INTERFACE ${TENGINE_COMMON_LINK_LIBRARIES})
+target_link_options (tengine_build_config INTERFACE ${TENGINE_COMMON_LINKER_OPTIONS})
 
 # tengine_public_include: unified header search paths.
 # the visibility matches the pre-refactor TENGINE_HEADER_PATH union, so no
 # existing include breaks; tighten per module later
-ADD_LIBRARY (tengine_public_include INTERFACE)
-TARGET_INCLUDE_DIRECTORIES (tengine_public_include INTERFACE
+add_library (tengine_public_include INTERFACE)
+target_include_directories (tengine_public_include INTERFACE
     "${CMAKE_SOURCE_DIR}/source"
     "${CMAKE_BINARY_DIR}/source"
     "${CMAKE_SOURCE_DIR}/source/device"
@@ -155,24 +155,24 @@ TARGET_INCLUDE_DIRECTORIES (tengine_public_include INTERFACE
 )
 
 # online report headers are used by the c api when the feature is enabled
-IF (TENGINE_ONLINE_REPORT AND NOT MSVC)
-    TARGET_INCLUDE_DIRECTORIES (tengine_public_include INTERFACE "${CMAKE_SOURCE_DIR}/source/olreport/include")
-ENDIF()
+if (TENGINE_ONLINE_REPORT AND NOT MSVC)
+    target_include_directories (tengine_public_include INTERFACE "${CMAKE_SOURCE_DIR}/source/olreport/include")
+endif()
 
 
 # configure building
-CONFIGURE_FILE(defines.h.in ${CMAKE_CURRENT_BINARY_DIR}/defines.h)
+configure_file(defines.h.in ${CMAKE_CURRENT_BINARY_DIR}/defines.h)
 
 
 # ---------------------------------------------------------------------------
 # module targets with their own CMakeLists
 # ---------------------------------------------------------------------------
-ADD_SUBDIRECTORY (device)                                   # each device as a executable backend
-ADD_SUBDIRECTORY (operator)                                 # operator framework and prototype
-ADD_SUBDIRECTORY (scheduler)                                # base and advanced scheduler for different backend
-ADD_SUBDIRECTORY (serializer)                               # multi-framework transform support
+add_subdirectory (device)                                   # each device as a executable backend
+add_subdirectory (operator)                                 # operator framework and prototype
+add_subdirectory (scheduler)                                # base and advanced scheduler for different backend
+add_subdirectory (serializer)                               # multi-framework transform support
 
-LIST (APPEND TENGINE_OBJECT_TARGETS
+list (APPEND TENGINE_OBJECT_TARGETS
     tengine_core_device
     tengine_device_cpu
     tengine_core_operator
@@ -185,71 +185,71 @@ LIST (APPEND TENGINE_OBJECT_TARGETS
 # flat modules: object libraries defined here with explicit source lists
 # ---------------------------------------------------------------------------
 # api module: public C API, the entry of all user code
-IF (TENGINE_BUILD_CPP_API)
-    FILE (GLOB _TENGINE_CXX_API_SOURCE CONFIGURE_DEPENDS "${CMAKE_SOURCE_DIR}/source/api/*.cc")
-    IF (NOT _TENGINE_CXX_API_SOURCE)
-        MESSAGE (FATAL_ERROR "TENGINE_BUILD_CPP_API is ON but no C++ API source found under source/api")
-    ENDIF()
-    SET (_TENGINE_API_SOURCE ${_TENGINE_CXX_API_SOURCE})
-ELSE()
-    SET (_TENGINE_API_SOURCE
+if (TENGINE_BUILD_CPP_API)
+    file (GLOB _TENGINE_CXX_API_SOURCE CONFIGURE_DEPENDS "${CMAKE_SOURCE_DIR}/source/api/*.cc")
+    if (NOT _TENGINE_CXX_API_SOURCE)
+        message (FATAL_ERROR "TENGINE_BUILD_CPP_API is ON but no C++ API source found under source/api")
+    endif()
+    set (_TENGINE_API_SOURCE ${_TENGINE_CXX_API_SOURCE})
+else()
+    set (_TENGINE_API_SOURCE
         "${CMAKE_SOURCE_DIR}/source/api/c_api.c"
         "${CMAKE_SOURCE_DIR}/source/api/plugin.c"
     )
-ENDIF()
+endif()
 
-ADD_LIBRARY (tengine_core_api OBJECT ${_TENGINE_API_SOURCE})
-TARGET_LINK_LIBRARIES (tengine_core_api PRIVATE tengine_build_config tengine_public_include)
-LIST (APPEND TENGINE_OBJECT_TARGETS tengine_core_api)
+add_library (tengine_core_api OBJECT ${_TENGINE_API_SOURCE})
+target_link_libraries (tengine_core_api PRIVATE tengine_build_config tengine_public_include)
+list (APPEND TENGINE_OBJECT_TARGETS tengine_core_api)
 
 
 # executer module: layer by layer graph executor
-ADD_LIBRARY (tengine_core_executer OBJECT
+add_library (tengine_core_executer OBJECT
     "${CMAKE_SOURCE_DIR}/source/executer/executer.c"
 )
-TARGET_LINK_LIBRARIES (tengine_core_executer PRIVATE tengine_build_config tengine_public_include)
-LIST (APPEND TENGINE_OBJECT_TARGETS tengine_core_executer)
+target_link_libraries (tengine_core_executer PRIVATE tengine_build_config tengine_public_include)
+list (APPEND TENGINE_OBJECT_TARGETS tengine_core_executer)
 
 
 # graph module: ir graph, node, tensor and subgraph
-ADD_LIBRARY (tengine_core_graph OBJECT
+add_library (tengine_core_graph OBJECT
     "${CMAKE_SOURCE_DIR}/source/graph/graph.c"
     "${CMAKE_SOURCE_DIR}/source/graph/node.c"
     "${CMAKE_SOURCE_DIR}/source/graph/subgraph.c"
     "${CMAKE_SOURCE_DIR}/source/graph/tensor.c"
 )
-TARGET_LINK_LIBRARIES (tengine_core_graph PRIVATE tengine_build_config tengine_public_include)
-LIST (APPEND TENGINE_OBJECT_TARGETS tengine_core_graph)
+target_link_libraries (tengine_core_graph PRIVATE tengine_build_config tengine_public_include)
+list (APPEND TENGINE_OBJECT_TARGETS tengine_core_graph)
 
 
 # module module: dynamic module registration
-ADD_LIBRARY (tengine_core_module OBJECT
+add_library (tengine_core_module OBJECT
     "${CMAKE_SOURCE_DIR}/source/module/module.c"
 )
-TARGET_LINK_LIBRARIES (tengine_core_module PRIVATE tengine_build_config tengine_public_include)
-LIST (APPEND TENGINE_OBJECT_TARGETS tengine_core_module)
+target_link_libraries (tengine_core_module PRIVATE tengine_build_config tengine_public_include)
+list (APPEND TENGINE_OBJECT_TARGETS tengine_core_module)
 
 
 # optimizer module: graph partition, estimation and helper
-ADD_LIBRARY (tengine_core_optimizer OBJECT
+add_library (tengine_core_optimizer OBJECT
     "${CMAKE_SOURCE_DIR}/source/optimizer/estimation.c"
     "${CMAKE_SOURCE_DIR}/source/optimizer/helper.c"
     "${CMAKE_SOURCE_DIR}/source/optimizer/split.c"
 )
-TARGET_LINK_LIBRARIES (tengine_core_optimizer PRIVATE tengine_build_config tengine_public_include)
-LIST (APPEND TENGINE_OBJECT_TARGETS tengine_core_optimizer)
+target_link_libraries (tengine_core_optimizer PRIVATE tengine_build_config tengine_public_include)
+list (APPEND TENGINE_OBJECT_TARGETS tengine_core_optimizer)
 
 
 # system module: cpu affinity and system info
-ADD_LIBRARY (tengine_core_system OBJECT
+add_library (tengine_core_system OBJECT
     "${CMAKE_SOURCE_DIR}/source/system/cpu.c"
 )
-TARGET_LINK_LIBRARIES (tengine_core_system PRIVATE tengine_build_config tengine_public_include)
-LIST (APPEND TENGINE_OBJECT_TARGETS tengine_core_system)
+target_link_libraries (tengine_core_system PRIVATE tengine_build_config tengine_public_include)
+list (APPEND TENGINE_OBJECT_TARGETS tengine_core_system)
 
 
 # utility module: log, memory, math, vector and other basic facilities
-ADD_LIBRARY (tengine_core_utility OBJECT
+add_library (tengine_core_utility OBJECT
     "${CMAKE_SOURCE_DIR}/source/utility/float.c"
     "${CMAKE_SOURCE_DIR}/source/utility/lock.c"
     "${CMAKE_SOURCE_DIR}/source/utility/log.c"
@@ -259,141 +259,141 @@ ADD_LIBRARY (tengine_core_utility OBJECT
     "${CMAKE_SOURCE_DIR}/source/utility/utils.c"
     "${CMAKE_SOURCE_DIR}/source/utility/vector.c"
 )
-TARGET_LINK_LIBRARIES (tengine_core_utility PRIVATE tengine_build_config tengine_public_include)
-LIST (APPEND TENGINE_OBJECT_TARGETS tengine_core_utility)
+target_link_libraries (tengine_core_utility PRIVATE tengine_build_config tengine_public_include)
+list (APPEND TENGINE_OBJECT_TARGETS tengine_core_utility)
 
 
 # online report module: optional, non MSVC only
-IF (NOT MSVC)
-    IF (TENGINE_ONLINE_REPORT)
-        FILE (GLOB_RECURSE TENGINE_ONLINE_REPORT_SRCS CONFIGURE_DEPENDS "${CMAKE_SOURCE_DIR}/source/olreport/*.c")
-        ADD_LIBRARY (tengine_core_olreport OBJECT ${TENGINE_ONLINE_REPORT_SRCS})
-        TARGET_LINK_LIBRARIES (tengine_core_olreport PRIVATE tengine_build_config tengine_public_include)
-        TARGET_INCLUDE_DIRECTORIES (tengine_core_olreport PRIVATE "${CMAKE_SOURCE_DIR}/source/olreport/include")
-        LIST (APPEND TENGINE_OBJECT_TARGETS tengine_core_olreport)
-    ENDIF()
-ENDIF()
+if (NOT MSVC)
+    if (TENGINE_ONLINE_REPORT)
+        file (GLOB_RECURSE TENGINE_ONLINE_REPORT_SRCS CONFIGURE_DEPENDS "${CMAKE_SOURCE_DIR}/source/olreport/*.c")
+        add_library (tengine_core_olreport OBJECT ${TENGINE_ONLINE_REPORT_SRCS})
+        target_link_libraries (tengine_core_olreport PRIVATE tengine_build_config tengine_public_include)
+        target_include_directories (tengine_core_olreport PRIVATE "${CMAKE_SOURCE_DIR}/source/olreport/include")
+        list (APPEND TENGINE_OBJECT_TARGETS tengine_core_olreport)
+    endif()
+endif()
 
 
 # ---------------------------------------------------------------------------
 # legacy header path / aggregation variables (kept for backend plugins)
 # ---------------------------------------------------------------------------
 # add header file searching path
-LIST (APPEND TENGINE_HEADER_PATH        "${CMAKE_SOURCE_DIR}/source")
-LIST (APPEND TENGINE_HEADER_PATH        "${CMAKE_BINARY_DIR}/source")
-LIST (APPEND TENGINE_HEADER_PATH        ${TENGINE_DEVICE_HEADER_PATH})
-LIST (APPEND TENGINE_HEADER_PATH        ${TENGINE_OP_HEADER_PATH})
-LIST (APPEND TENGINE_HEADER_PATH        ${TENGINE_SERIALIZER_HEADER_PATH})
+list (APPEND TENGINE_HEADER_PATH        "${CMAKE_SOURCE_DIR}/source")
+list (APPEND TENGINE_HEADER_PATH        "${CMAKE_BINARY_DIR}/source")
+list (APPEND TENGINE_HEADER_PATH        ${TENGINE_DEVICE_HEADER_PATH})
+list (APPEND TENGINE_HEADER_PATH        ${TENGINE_OP_HEADER_PATH})
+list (APPEND TENGINE_HEADER_PATH        ${TENGINE_SERIALIZER_HEADER_PATH})
 
 
 # link libraries search path
-LIST (APPEND TENGINE_LINK_PATH          ${TENGINE_DEVICE_LINK_PATH})
+list (APPEND TENGINE_LINK_PATH          ${TENGINE_DEVICE_LINK_PATH})
 
 
 # add compiler defines
-LIST (APPEND TENGINE_COMPILER_DEFINES   ${TENGINE_COMMON_DEFINES})
-LIST (APPEND TENGINE_COMPILER_DEFINES   ${TENGINE_DEVICE_COMPILER_DEFINES})
-LIST (APPEND TENGINE_COMPILER_DEFINES   ${TENGINE_OPERATOR_COMPILER_DEFINES})
-LIST (APPEND TENGINE_COMPILER_DEFINES   ${TENGINE_SCHEDULER_COMPILER_DEFINES})
-LIST (APPEND TENGINE_COMPILER_DEFINES   ${TENGINE_SERIALIZER_COMPILER_DEFINES})
-LIST (APPEND TENGINE_COMPILER_DEFINES   ${TENGINE_EXECUTER_COMPILER_DEFINES})
-LIST (APPEND TENGINE_COMPILER_DEFINES   ${TENGINE_EXPORTER_COMPILER_DEFINES})
-LIST (APPEND TENGINE_COMPILER_DEFINES   ${TENGINE_OPTIMIZER_COMPILER_DEFINES})
+list (APPEND TENGINE_COMPILER_DEFINES   ${TENGINE_COMMON_DEFINES})
+list (APPEND TENGINE_COMPILER_DEFINES   ${TENGINE_DEVICE_COMPILER_DEFINES})
+list (APPEND TENGINE_COMPILER_DEFINES   ${TENGINE_OPERATOR_COMPILER_DEFINES})
+list (APPEND TENGINE_COMPILER_DEFINES   ${TENGINE_SCHEDULER_COMPILER_DEFINES})
+list (APPEND TENGINE_COMPILER_DEFINES   ${TENGINE_SERIALIZER_COMPILER_DEFINES})
+list (APPEND TENGINE_COMPILER_DEFINES   ${TENGINE_EXECUTER_COMPILER_DEFINES})
+list (APPEND TENGINE_COMPILER_DEFINES   ${TENGINE_EXPORTER_COMPILER_DEFINES})
+list (APPEND TENGINE_COMPILER_DEFINES   ${TENGINE_OPTIMIZER_COMPILER_DEFINES})
 
 
 # add compiler options
-LIST (APPEND TENGINE_COMPILER_OPTIONS   ${TENGINE_COMMON_OPTIONS})
-LIST (APPEND TENGINE_COMPILER_OPTIONS   ${TENGINE_DEVICE_COMPILER_OPTIONS})
-LIST (APPEND TENGINE_COMPILER_OPTIONS   ${TENGINE_OPERATOR_COMPILER_OPTIONS})
-LIST (APPEND TENGINE_COMPILER_OPTIONS   ${TENGINE_SCHEDULER_COMPILER_OPTIONS})
-LIST (APPEND TENGINE_COMPILER_OPTIONS   ${TENGINE_SERIALIZER_COMPILER_OPTIONS})
-LIST (APPEND TENGINE_COMPILER_OPTIONS   ${TENGINE_EXECUTER_COMPILER_OPTIONS})
-LIST (APPEND TENGINE_COMPILER_OPTIONS   ${TENGINE_EXPORTER_COMPILER_OPTIONS})
-LIST (APPEND TENGINE_COMPILER_OPTIONS   ${TENGINE_GRAPH_COMPILER_OPTIONS})
-LIST (APPEND TENGINE_COMPILER_OPTIONS   ${TENGINE_MODULE_COMPILER_OPTIONS})
-LIST (APPEND TENGINE_COMPILER_OPTIONS   ${TENGINE_OPTIMIZER_COMPILER_OPTIONS})
-LIST (APPEND TENGINE_COMPILER_OPTIONS   ${TENGINE_UTILITY_COMPILER_OPTIONS})
+list (APPEND TENGINE_COMPILER_OPTIONS   ${TENGINE_COMMON_OPTIONS})
+list (APPEND TENGINE_COMPILER_OPTIONS   ${TENGINE_DEVICE_COMPILER_OPTIONS})
+list (APPEND TENGINE_COMPILER_OPTIONS   ${TENGINE_OPERATOR_COMPILER_OPTIONS})
+list (APPEND TENGINE_COMPILER_OPTIONS   ${TENGINE_SCHEDULER_COMPILER_OPTIONS})
+list (APPEND TENGINE_COMPILER_OPTIONS   ${TENGINE_SERIALIZER_COMPILER_OPTIONS})
+list (APPEND TENGINE_COMPILER_OPTIONS   ${TENGINE_EXECUTER_COMPILER_OPTIONS})
+list (APPEND TENGINE_COMPILER_OPTIONS   ${TENGINE_EXPORTER_COMPILER_OPTIONS})
+list (APPEND TENGINE_COMPILER_OPTIONS   ${TENGINE_GRAPH_COMPILER_OPTIONS})
+list (APPEND TENGINE_COMPILER_OPTIONS   ${TENGINE_MODULE_COMPILER_OPTIONS})
+list (APPEND TENGINE_COMPILER_OPTIONS   ${TENGINE_OPTIMIZER_COMPILER_OPTIONS})
+list (APPEND TENGINE_COMPILER_OPTIONS   ${TENGINE_UTILITY_COMPILER_OPTIONS})
 
 
 # add linker options
-LIST (APPEND TENGINE_LINKER_OPTIONS     ${TENGINE_COMMON_LINKER_OPTIONS})
-LIST (APPEND TENGINE_LINKER_OPTIONS     ${TENGINE_DEVICE_LINKER_OPTIONS})
-LIST (APPEND TENGINE_LINKER_OPTIONS     ${TENGINE_OPERATOR_LINKER_OPTIONS})
-LIST (APPEND TENGINE_LINKER_OPTIONS     ${TENGINE_SCHEDULER_LINKER_OPTIONS})
-LIST (APPEND TENGINE_LINKER_OPTIONS     ${TENGINE_SERIALIZER_LINKER_OPTIONS})
-LIST (APPEND TENGINE_LINKER_OPTIONS     ${TENGINE_EXECUTER_LINKER_OPTIONS})
-LIST (APPEND TENGINE_LINKER_OPTIONS     ${TENGINE_EXPORTER_LINKER_OPTIONS})
-LIST (APPEND TENGINE_LINKER_OPTIONS     ${TENGINE_GRAPH_LINKER_OPTIONS})
-LIST (APPEND TENGINE_LINKER_OPTIONS     ${TENGINE_MODULE_LINKER_OPTIONS})
-LIST (APPEND TENGINE_LINKER_OPTIONS     ${TENGINE_OPTIMIZER_LINKER_OPTIONS})
-LIST (APPEND TENGINE_LINKER_OPTIONS     ${TENGINE_UTILITY_LINKER_OPTIONS})
+list (APPEND TENGINE_LINKER_OPTIONS     ${TENGINE_COMMON_LINKER_OPTIONS})
+list (APPEND TENGINE_LINKER_OPTIONS     ${TENGINE_DEVICE_LINKER_OPTIONS})
+list (APPEND TENGINE_LINKER_OPTIONS     ${TENGINE_OPERATOR_LINKER_OPTIONS})
+list (APPEND TENGINE_LINKER_OPTIONS     ${TENGINE_SCHEDULER_LINKER_OPTIONS})
+list (APPEND TENGINE_LINKER_OPTIONS     ${TENGINE_SERIALIZER_LINKER_OPTIONS})
+list (APPEND TENGINE_LINKER_OPTIONS     ${TENGINE_EXECUTER_LINKER_OPTIONS})
+list (APPEND TENGINE_LINKER_OPTIONS     ${TENGINE_EXPORTER_LINKER_OPTIONS})
+list (APPEND TENGINE_LINKER_OPTIONS     ${TENGINE_GRAPH_LINKER_OPTIONS})
+list (APPEND TENGINE_LINKER_OPTIONS     ${TENGINE_MODULE_LINKER_OPTIONS})
+list (APPEND TENGINE_LINKER_OPTIONS     ${TENGINE_OPTIMIZER_LINKER_OPTIONS})
+list (APPEND TENGINE_LINKER_OPTIONS     ${TENGINE_UTILITY_LINKER_OPTIONS})
 
 
 # add link libraries
-LIST (APPEND TENGINE_LINK_LIBRARIES     ${TENGINE_COMMON_LINK_LIBRARIES})
-LIST (APPEND TENGINE_LINK_LIBRARIES     ${TENGINE_DEVICE_LINK_LIBRARIES})
-LIST (APPEND TENGINE_LINK_LIBRARIES     ${TENGINE_OPERATOR_LINK_LIBRARIES})
-LIST (APPEND TENGINE_LINK_LIBRARIES     ${TENGINE_SCHEDULER_LINK_LIBRARIES})
-LIST (APPEND TENGINE_LINK_LIBRARIES     ${TENGINE_SERIALIZER_LINK_LIBRARIES})
-LIST (APPEND TENGINE_LINK_LIBRARIES     ${TENGINE_EXECUTER_LINK_LIBRARIES})
-LIST (APPEND TENGINE_LINK_LIBRARIES     ${TENGINE_EXPORTER_LINK_LIBRARIES})
-LIST (APPEND TENGINE_LINK_LIBRARIES     ${TENGINE_GRAPH_LINK_LIBRARIES})
-LIST (APPEND TENGINE_LINK_LIBRARIES     ${TENGINE_MODULE_LINK_LIBRARIES})
-LIST (APPEND TENGINE_LINK_LIBRARIES     ${TENGINE_OPTIMIZER_LINK_LIBRARIES})
-LIST (APPEND TENGINE_LINK_LIBRARIES     ${TENGINE_UTILITY_LINK_LIBRARIES})
+list (APPEND TENGINE_LINK_LIBRARIES     ${TENGINE_COMMON_LINK_LIBRARIES})
+list (APPEND TENGINE_LINK_LIBRARIES     ${TENGINE_DEVICE_LINK_LIBRARIES})
+list (APPEND TENGINE_LINK_LIBRARIES     ${TENGINE_OPERATOR_LINK_LIBRARIES})
+list (APPEND TENGINE_LINK_LIBRARIES     ${TENGINE_SCHEDULER_LINK_LIBRARIES})
+list (APPEND TENGINE_LINK_LIBRARIES     ${TENGINE_SERIALIZER_LINK_LIBRARIES})
+list (APPEND TENGINE_LINK_LIBRARIES     ${TENGINE_EXECUTER_LINK_LIBRARIES})
+list (APPEND TENGINE_LINK_LIBRARIES     ${TENGINE_EXPORTER_LINK_LIBRARIES})
+list (APPEND TENGINE_LINK_LIBRARIES     ${TENGINE_GRAPH_LINK_LIBRARIES})
+list (APPEND TENGINE_LINK_LIBRARIES     ${TENGINE_MODULE_LINK_LIBRARIES})
+list (APPEND TENGINE_LINK_LIBRARIES     ${TENGINE_OPTIMIZER_LINK_LIBRARIES})
+list (APPEND TENGINE_LINK_LIBRARIES     ${TENGINE_UTILITY_LINK_LIBRARIES})
 
 
 # backend plugin source files, compiled directly into the final targets until
 # each backend grows its own object library
-LIST (APPEND TENGINE_SOURCE_FILES       ${TENGINE_DEVICE_SOURCE})
+list (APPEND TENGINE_SOURCE_FILES       ${TENGINE_DEVICE_SOURCE})
 
 
 # ---------------------------------------------------------------------------
 # final targets: static and shared library
 # ---------------------------------------------------------------------------
 # export the module list to parent scope, cmake/summary.cmake prints it
-SET (TENGINE_OBJECT_TARGETS ${TENGINE_OBJECT_TARGETS} CACHE INTERNAL "Tengine module object targets" FORCE)
+set (TENGINE_OBJECT_TARGETS ${TENGINE_OBJECT_TARGETS} CACHE INTERNAL "Tengine module object targets" FORCE)
 
-ADD_LIBRARY (${TENGINE_LITE_NAME}-static STATIC)
-ADD_LIBRARY (${TENGINE_LITE_NAME}        SHARED)
+add_library (${TENGINE_LITE_NAME}-static STATIC)
+add_library (${TENGINE_LITE_NAME}        SHARED)
 
 # add module object files to each target
-FOREACH (_MODULE_TARGET ${TENGINE_OBJECT_TARGETS})
-    TARGET_SOURCES (${TENGINE_LITE_NAME}-static PRIVATE $<TARGET_OBJECTS:${_MODULE_TARGET}>)
-    TARGET_SOURCES (${TENGINE_LITE_NAME}        PRIVATE $<TARGET_OBJECTS:${_MODULE_TARGET}>)
-ENDFOREACH()
+foreach (_MODULE_TARGET ${TENGINE_OBJECT_TARGETS})
+    target_sources (${TENGINE_LITE_NAME}-static PRIVATE $<TARGET_OBJECTS:${_MODULE_TARGET}>)
+    target_sources (${TENGINE_LITE_NAME}        PRIVATE $<TARGET_OBJECTS:${_MODULE_TARGET}>)
+endforeach()
 
 # add backend plugin source files to each target
-TARGET_SOURCES (${TENGINE_LITE_NAME}-static PRIVATE ${TENGINE_SOURCE_FILES})
-TARGET_SOURCES (${TENGINE_LITE_NAME}        PRIVATE ${TENGINE_SOURCE_FILES})
+target_sources (${TENGINE_LITE_NAME}-static PRIVATE ${TENGINE_SOURCE_FILES})
+target_sources (${TENGINE_LITE_NAME}        PRIVATE ${TENGINE_SOURCE_FILES})
 
 # add header file search path
-TARGET_INCLUDE_DIRECTORIES (${TENGINE_LITE_NAME}-static PRIVATE ${TENGINE_HEADER_PATH})
-TARGET_INCLUDE_DIRECTORIES (${TENGINE_LITE_NAME}        PRIVATE ${TENGINE_HEADER_PATH})
+target_include_directories (${TENGINE_LITE_NAME}-static PRIVATE ${TENGINE_HEADER_PATH})
+target_include_directories (${TENGINE_LITE_NAME}        PRIVATE ${TENGINE_HEADER_PATH})
 
 # common build configuration, private so it never leaks to consumers
-TARGET_LINK_LIBRARIES (${TENGINE_LITE_NAME}-static PRIVATE tengine_build_config)
-TARGET_LINK_LIBRARIES (${TENGINE_LITE_NAME}        PRIVATE tengine_build_config)
+target_link_libraries (${TENGINE_LITE_NAME}-static PRIVATE tengine_build_config)
+target_link_libraries (${TENGINE_LITE_NAME}        PRIVATE tengine_build_config)
 
 # add link libraries search path
-TARGET_LINK_DIRECTORIES (${TENGINE_LITE_NAME}-static PUBLIC ${TENGINE_LINK_PATH})
-TARGET_LINK_DIRECTORIES (${TENGINE_LITE_NAME}        PUBLIC ${TENGINE_LINK_PATH})
+target_link_directories (${TENGINE_LITE_NAME}-static PUBLIC ${TENGINE_LINK_PATH})
+target_link_directories (${TENGINE_LITE_NAME}        PUBLIC ${TENGINE_LINK_PATH})
 
 # add defines
-TARGET_COMPILE_DEFINITIONS (${TENGINE_LITE_NAME}-static PRIVATE $<$<OR:$<COMPILE_LANGUAGE:C>,$<COMPILE_LANGUAGE:CXX>>:${TENGINE_COMPILER_DEFINES}>)
-TARGET_COMPILE_DEFINITIONS (${TENGINE_LITE_NAME}        PRIVATE $<$<OR:$<COMPILE_LANGUAGE:C>,$<COMPILE_LANGUAGE:CXX>>:${TENGINE_COMPILER_DEFINES}>)
+target_compile_definitions (${TENGINE_LITE_NAME}-static PRIVATE $<$<OR:$<COMPILE_LANGUAGE:C>,$<COMPILE_LANGUAGE:CXX>>:${TENGINE_COMPILER_DEFINES}>)
+target_compile_definitions (${TENGINE_LITE_NAME}        PRIVATE $<$<OR:$<COMPILE_LANGUAGE:C>,$<COMPILE_LANGUAGE:CXX>>:${TENGINE_COMPILER_DEFINES}>)
 
 # add options
-TARGET_COMPILE_OPTIONS (${TENGINE_LITE_NAME}-static PUBLIC $<$<OR:$<COMPILE_LANGUAGE:C>,$<COMPILE_LANGUAGE:CXX>>:${TENGINE_COMPILER_OPTIONS}>)
-TARGET_COMPILE_OPTIONS (${TENGINE_LITE_NAME}        PUBLIC $<$<OR:$<COMPILE_LANGUAGE:C>,$<COMPILE_LANGUAGE:CXX>>:${TENGINE_COMPILER_OPTIONS}>)
+target_compile_options (${TENGINE_LITE_NAME}-static PUBLIC $<$<OR:$<COMPILE_LANGUAGE:C>,$<COMPILE_LANGUAGE:CXX>>:${TENGINE_COMPILER_OPTIONS}>)
+target_compile_options (${TENGINE_LITE_NAME}        PUBLIC $<$<OR:$<COMPILE_LANGUAGE:C>,$<COMPILE_LANGUAGE:CXX>>:${TENGINE_COMPILER_OPTIONS}>)
 
 # add link options (target_LINKER_OPTIONS need CMake 3.13 at least)
-TARGET_LINK_OPTIONS (${TENGINE_LITE_NAME}-static PUBLIC $<$<OR:$<COMPILE_LANGUAGE:C>,$<COMPILE_LANGUAGE:CXX>>:${TENGINE_LINKER_OPTIONS}>)
-TARGET_LINK_OPTIONS (${TENGINE_LITE_NAME}        PUBLIC $<$<OR:$<COMPILE_LANGUAGE:C>,$<COMPILE_LANGUAGE:CXX>>:${TENGINE_LINKER_OPTIONS}>)
+target_link_options (${TENGINE_LITE_NAME}-static PUBLIC $<$<OR:$<COMPILE_LANGUAGE:C>,$<COMPILE_LANGUAGE:CXX>>:${TENGINE_LINKER_OPTIONS}>)
+target_link_options (${TENGINE_LITE_NAME}        PUBLIC $<$<OR:$<COMPILE_LANGUAGE:C>,$<COMPILE_LANGUAGE:CXX>>:${TENGINE_LINKER_OPTIONS}>)
 
 # add link libraries
-TARGET_LINK_LIBRARIES (${TENGINE_LITE_NAME}-static PUBLIC  ${TENGINE_LINK_LIBRARIES})
-TARGET_LINK_LIBRARIES (${TENGINE_LITE_NAME}        PUBLIC  ${TENGINE_LINK_LIBRARIES})
+target_link_libraries (${TENGINE_LITE_NAME}-static PUBLIC  ${TENGINE_LINK_LIBRARIES})
+target_link_libraries (${TENGINE_LITE_NAME}        PUBLIC  ${TENGINE_LINK_LIBRARIES})
 
 
 # ---------------------------------------------------------------------------
@@ -401,162 +401,162 @@ TARGET_LINK_LIBRARIES (${TENGINE_LITE_NAME}        PUBLIC  ${TENGINE_LINK_LIBRAR
 # ---------------------------------------------------------------------------
 # openmp detection first, object libraries need the compile flags as well,
 # otherwise #pragma omp would be silently ignored
-UNSET (_has_openmp)
-IF (NOT (TENGINE_FORCE_SKIP_OPENMP) AND TENGINE_OPENMP)
-    INCLUDE (${PROJECT_SOURCE_DIR}/cmake/libraries/openmp.cmake)
-    TENGINE_CHECK_LIB_OPENMP (_has_openmp)
-ENDIF()
+unset (_has_openmp)
+if (NOT (TENGINE_FORCE_SKIP_OPENMP) AND TENGINE_OPENMP)
+    include (${PROJECT_SOURCE_DIR}/cmake/libraries/openmp.cmake)
+    tengine_check_lib_openmp (_has_openmp)
+endif()
 
-FOREACH (_MODULE_TARGET ${TENGINE_OBJECT_TARGETS})
+foreach (_MODULE_TARGET ${TENGINE_OBJECT_TARGETS})
     # objects are linked into both the static and the shared library,
     # position independent code is required by the shared one
-    SET_TARGET_PROPERTIES (${_MODULE_TARGET} PROPERTIES POSITION_INDEPENDENT_CODE ON)
+    set_target_properties (${_MODULE_TARGET} PROPERTIES POSITION_INDEPENDENT_CODE ON)
 
-    TENGINE_APPLY_TOOLCHAIN_FLAGS (${_MODULE_TARGET})
-    IF (_has_openmp)
-        TENGINE_COMPILE_LIB_OPENMP (${_MODULE_TARGET})
-    ENDIF()
+    tengine_apply_toolchain_flags (${_MODULE_TARGET})
+    if (_has_openmp)
+        tengine_compile_lib_openmp (${_MODULE_TARGET})
+    endif()
 
     # strip unused sections, helps reducing the size of the static library
-    IF (TENGINE_COMPILER_GCC OR TENGINE_COMPILER_CLANG)
-        TARGET_COMPILE_OPTIONS (${_MODULE_TARGET} PRIVATE $<$<OR:$<COMPILE_LANGUAGE:C>,$<COMPILE_LANGUAGE:CXX>>:-fdata-sections>)
-        TARGET_COMPILE_OPTIONS (${_MODULE_TARGET} PRIVATE $<$<OR:$<COMPILE_LANGUAGE:C>,$<COMPILE_LANGUAGE:CXX>>:-ffunction-sections>)
+    if (TENGINE_COMPILER_GCC OR TENGINE_COMPILER_CLANG)
+        target_compile_options (${_MODULE_TARGET} PRIVATE $<$<OR:$<COMPILE_LANGUAGE:C>,$<COMPILE_LANGUAGE:CXX>>:-fdata-sections>)
+        target_compile_options (${_MODULE_TARGET} PRIVATE $<$<OR:$<COMPILE_LANGUAGE:C>,$<COMPILE_LANGUAGE:CXX>>:-ffunction-sections>)
 
         # hide internal symbols in the shared library, the public C API stays
         # visible through the DLLEXPORT attribute in c_api.h
-        IF (NOT TENGINE_ENABLE_ALL_SYMBOL)
-            TARGET_COMPILE_OPTIONS (${_MODULE_TARGET} PRIVATE $<$<OR:$<COMPILE_LANGUAGE:C>,$<COMPILE_LANGUAGE:CXX>>:-fvisibility=hidden>)
-        ENDIF()
-    ENDIF()
-ENDFOREACH()
+        if (NOT TENGINE_ENABLE_ALL_SYMBOL)
+            target_compile_options (${_MODULE_TARGET} PRIVATE $<$<OR:$<COMPILE_LANGUAGE:C>,$<COMPILE_LANGUAGE:CXX>>:-fvisibility=hidden>)
+        endif()
+    endif()
+endforeach()
 
 
 # default support openmp
-IF (_has_openmp)
-    TENGINE_USE_LIB_OPENMP (${TENGINE_LITE_NAME}-static ON)
-    TENGINE_USE_LIB_OPENMP (${TENGINE_LITE_NAME}        OFF)
-    IF(MSVC)
-        SET_SOURCE_FILES_PROPERTIES(${TENGINE_SOURCE_FILES} PROPERTIES LANGUAGE CXX)
-        TARGET_COMPILE_OPTIONS(${TENGINE_LITE_NAME}-static PRIVATE /std:c++latest)
-        TARGET_COMPILE_OPTIONS(${TENGINE_LITE_NAME}        PRIVATE /std:c++latest)
-    ENDIF()
+if (_has_openmp)
+    tengine_use_lib_openmp (${TENGINE_LITE_NAME}-static ON)
+    tengine_use_lib_openmp (${TENGINE_LITE_NAME}        OFF)
+    if(MSVC)
+        set_source_files_properties(${TENGINE_SOURCE_FILES} PROPERTIES LANGUAGE CXX)
+        target_compile_options(${TENGINE_LITE_NAME}-static PRIVATE /std:c++latest)
+        target_compile_options(${TENGINE_LITE_NAME}        PRIVATE /std:c++latest)
+    endif()
 
-    SET (TENGINE_ENABLED_OPENMP ${OpenMP_C_VERSION} CACHE INTERNAL "" FORCE)
-ENDIF()
-UNSET (_has_openmp)
+    set (TENGINE_ENABLED_OPENMP ${OpenMP_C_VERSION} CACHE INTERNAL "" FORCE)
+endif()
+unset (_has_openmp)
 
 # pthread
-IF (NOT OHOS)
-	INCLUDE (${PROJECT_SOURCE_DIR}/cmake/libraries/pthread.cmake)
-	TENGINE_CHECK_LIB_PTHREAD (_has_pthread)
-	IF (_has_pthread)
-		TENGINE_USE_LIB_PTHREAD (${TENGINE_LITE_NAME}-static ON)
-		TENGINE_USE_LIB_PTHREAD (${TENGINE_LITE_NAME}        OFF)
-	ENDIF()
-	UNSET (_has_pthread)
-ENDIF()
+if (NOT OHOS)
+	include (${PROJECT_SOURCE_DIR}/cmake/libraries/pthread.cmake)
+	tengine_check_lib_pthread (_has_pthread)
+	if (_has_pthread)
+		tengine_use_lib_pthread (${TENGINE_LITE_NAME}-static ON)
+		tengine_use_lib_pthread (${TENGINE_LITE_NAME}        OFF)
+	endif()
+	unset (_has_pthread)
+endif()
 
 
 #
-IF (TENGINE_COMPILER_GCC OR TENGINE_COMPILER_CLANG)
+if (TENGINE_COMPILER_GCC OR TENGINE_COMPILER_CLANG)
     # linking time optimization
-    IF ((NOT ANDROID) AND (NOT OHOS))
+    if ((NOT ANDROID) AND (NOT OHOS))
         #TARGET_COMPILE_OPTIONS (${TENGINE_LITE_NAME} PRIVATE $<$<OR:$<COMPILE_LANGUAGE:C>,$<COMPILE_LANGUAGE:CXX>>:-flto>)
-    ENDIF()
+    endif()
 
-    IF (NOT TENGINE_ENABLE_ALL_SYMBOL)
-        TARGET_COMPILE_OPTIONS (${TENGINE_LITE_NAME} PRIVATE $<$<OR:$<COMPILE_LANGUAGE:C>,$<COMPILE_LANGUAGE:CXX>>:-fvisibility=hidden>)
-    ENDIF()
+    if (NOT TENGINE_ENABLE_ALL_SYMBOL)
+        target_compile_options (${TENGINE_LITE_NAME} PRIVATE $<$<OR:$<COMPILE_LANGUAGE:C>,$<COMPILE_LANGUAGE:CXX>>:-fvisibility=hidden>)
+    endif()
 
     # it seems will lead to some error
     #ADD_COMPILE_OPTIONS ($<$<COMPILE_LANGUAGE:CXX>:-Wl,-rpath,'$ORIGIN:/lib>)
 
     #SET_TARGET_PROPERTIES(${TENGINE_LITE_NAME}-static PROPERTIES LINK_FLAGS "-Wl,--exclude-libs,ALL")
-ENDIF()
+endif()
 
 
 # apply external toolchain flags to the final targets
-TENGINE_APPLY_TOOLCHAIN_FLAGS (${TENGINE_LITE_NAME}-static)
-TENGINE_APPLY_TOOLCHAIN_FLAGS (${TENGINE_LITE_NAME})
+tengine_apply_toolchain_flags (${TENGINE_LITE_NAME}-static)
+tengine_apply_toolchain_flags (${TENGINE_LITE_NAME})
 
 
 # cuda above option
-IF (TENGINE_ENABLE_CUDA)
-    IF (TENGINE_ENV_HAS_CXX14)
-        SET_PROPERTY(TARGET ${TENGINE_LITE_NAME}-static PROPERTY CUDA_STANDARD 14)
-        SET_PROPERTY(TARGET ${TENGINE_LITE_NAME}        PROPERTY CUDA_STANDARD 14)
-    ELSE()
-        SET_PROPERTY(TARGET ${TENGINE_LITE_NAME}-static PROPERTY CUDA_STANDARD 11)
-        SET_PROPERTY(TARGET ${TENGINE_LITE_NAME}        PROPERTY CUDA_STANDARD 11)
-    ENDIF()
-    SET_PROPERTY(TARGET ${TENGINE_LITE_NAME}-static PROPERTY CUDA_STANDARD_REQUIRED ON)
-    SET_PROPERTY(TARGET ${TENGINE_LITE_NAME}        PROPERTY CUDA_STANDARD_REQUIRED ON)
+if (TENGINE_ENABLE_CUDA)
+    if (TENGINE_ENV_HAS_CXX14)
+        set_property(TARGET ${TENGINE_LITE_NAME}-static PROPERTY CUDA_STANDARD 14)
+        set_property(TARGET ${TENGINE_LITE_NAME}        PROPERTY CUDA_STANDARD 14)
+    else()
+        set_property(TARGET ${TENGINE_LITE_NAME}-static PROPERTY CUDA_STANDARD 11)
+        set_property(TARGET ${TENGINE_LITE_NAME}        PROPERTY CUDA_STANDARD 11)
+    endif()
+    set_property(TARGET ${TENGINE_LITE_NAME}-static PROPERTY CUDA_STANDARD_REQUIRED ON)
+    set_property(TARGET ${TENGINE_LITE_NAME}        PROPERTY CUDA_STANDARD_REQUIRED ON)
 
-    TARGET_COMPILE_OPTIONS (${TENGINE_LITE_NAME}-static PRIVATE $<$<COMPILE_LANGUAGE:CUDA>:-Werror=cross-execution-space-call>)
-    TARGET_COMPILE_OPTIONS (${TENGINE_LITE_NAME}        PRIVATE $<$<COMPILE_LANGUAGE:CUDA>:-Werror=cross-execution-space-call>)
+    target_compile_options (${TENGINE_LITE_NAME}-static PRIVATE $<$<COMPILE_LANGUAGE:CUDA>:-Werror=cross-execution-space-call>)
+    target_compile_options (${TENGINE_LITE_NAME}        PRIVATE $<$<COMPILE_LANGUAGE:CUDA>:-Werror=cross-execution-space-call>)
 
-    IF (${CMAKE_MINOR_VERSION} GREATER 17)
-        IF (TENGINE_TARGET_PROCESSOR MATCHES "ARM")
-            SET_PROPERTY(TARGET ${TENGINE_LITE_NAME}-static PROPERTY CUDA_ARCHITECTURES 53 62 72)
-            SET_PROPERTY(TARGET ${TENGINE_LITE_NAME}        PROPERTY CUDA_ARCHITECTURES 53 62 72)
-        ELSE()
-            SET_PROPERTY(TARGET ${TENGINE_LITE_NAME}-static PROPERTY CUDA_ARCHITECTURES 50 52 61 70 75)
-            SET_PROPERTY(TARGET ${TENGINE_LITE_NAME}        PROPERTY CUDA_ARCHITECTURES 50 52 61 70 75)
-        ENDIF()
-    ENDIF()
-ENDIF()
+    if (${CMAKE_MINOR_VERSION} GREATER 17)
+        if (TENGINE_TARGET_PROCESSOR MATCHES "ARM")
+            set_property(TARGET ${TENGINE_LITE_NAME}-static PROPERTY CUDA_ARCHITECTURES 53 62 72)
+            set_property(TARGET ${TENGINE_LITE_NAME}        PROPERTY CUDA_ARCHITECTURES 53 62 72)
+        else()
+            set_property(TARGET ${TENGINE_LITE_NAME}-static PROPERTY CUDA_ARCHITECTURES 50 52 61 70 75)
+            set_property(TARGET ${TENGINE_LITE_NAME}        PROPERTY CUDA_ARCHITECTURES 50 52 61 70 75)
+        endif()
+    endif()
+endif()
 
 # deal with depends
-FOREACH(_var ${TENGINE_DEVICE_DEPENDS_FORWARD})
-    ADD_DEPENDENCIES(${TENGINE_LITE_NAME}-static ${_var})
-    ADD_DEPENDENCIES(${TENGINE_LITE_NAME}        ${_var})
-ENDFOREACH()
+foreach(_var ${TENGINE_DEVICE_DEPENDS_FORWARD})
+    add_dependencies(${TENGINE_LITE_NAME}-static ${_var})
+    add_dependencies(${TENGINE_LITE_NAME}        ${_var})
+endforeach()
 
 # debug macro information, applied on module object libraries so both the
 # static and shared library behave the same (all switches default to OFF)
-SET (_TENGINE_DEBUG_DEFINES)
-IF (TENGINE_DEBUG_MEM_STAT)
-    LIST (APPEND _TENGINE_DEBUG_DEFINES CONFIG_MEM_STAT)
-ENDIF()
-IF (TENGINE_DEBUG_DATA)
-    LIST (APPEND _TENGINE_DEBUG_DEFINES DEBUG_DATA)
-ENDIF()
-IF (TENGINE_DEBUG_TIME)
-    LIST (APPEND _TENGINE_DEBUG_DEFINES DEBUG_TIME)
-ENDIF()
-IF (TENGINE_LITE_VERSION)
-    LIST (APPEND _TENGINE_DEBUG_DEFINES TENGINE_LITE_VERSION=${TENGINE_LITE_VERSION})
-ENDIF()
-IF (TENGINE_VERSION_POSTFIX)
-    LIST (APPEND _TENGINE_DEBUG_DEFINES TENGINE_VERSION_POSTFIX=${TENGINE_VERSION_POSTFIX})
-ENDIF()
+set (_TENGINE_DEBUG_DEFINES)
+if (TENGINE_DEBUG_MEM_STAT)
+    list (APPEND _TENGINE_DEBUG_DEFINES CONFIG_MEM_STAT)
+endif()
+if (TENGINE_DEBUG_DATA)
+    list (APPEND _TENGINE_DEBUG_DEFINES DEBUG_DATA)
+endif()
+if (TENGINE_DEBUG_TIME)
+    list (APPEND _TENGINE_DEBUG_DEFINES DEBUG_TIME)
+endif()
+if (TENGINE_LITE_VERSION)
+    list (APPEND _TENGINE_DEBUG_DEFINES TENGINE_LITE_VERSION=${TENGINE_LITE_VERSION})
+endif()
+if (TENGINE_VERSION_POSTFIX)
+    list (APPEND _TENGINE_DEBUG_DEFINES TENGINE_VERSION_POSTFIX=${TENGINE_VERSION_POSTFIX})
+endif()
 
-IF (_TENGINE_DEBUG_DEFINES)
-    FOREACH (_MODULE_TARGET ${TENGINE_OBJECT_TARGETS})
-        TARGET_COMPILE_DEFINITIONS(${_MODULE_TARGET} PRIVATE ${_TENGINE_DEBUG_DEFINES})
-    ENDFOREACH()
+if (_TENGINE_DEBUG_DEFINES)
+    foreach (_MODULE_TARGET ${TENGINE_OBJECT_TARGETS})
+        target_compile_definitions(${_MODULE_TARGET} PRIVATE ${_TENGINE_DEBUG_DEFINES})
+    endforeach()
 
     # backend plugin sources are compiled inside the final targets
-    TARGET_COMPILE_DEFINITIONS(${TENGINE_LITE_NAME}-static PRIVATE $<$<OR:$<COMPILE_LANGUAGE:C>,$<COMPILE_LANGUAGE:CXX>>:${_TENGINE_DEBUG_DEFINES}>)
-    TARGET_COMPILE_DEFINITIONS(${TENGINE_LITE_NAME}        PRIVATE $<$<OR:$<COMPILE_LANGUAGE:C>,$<COMPILE_LANGUAGE:CXX>>:${_TENGINE_DEBUG_DEFINES}>)
-ENDIF()
-UNSET (_TENGINE_DEBUG_DEFINES)
+    target_compile_definitions(${TENGINE_LITE_NAME}-static PRIVATE $<$<OR:$<COMPILE_LANGUAGE:C>,$<COMPILE_LANGUAGE:CXX>>:${_TENGINE_DEBUG_DEFINES}>)
+    target_compile_definitions(${TENGINE_LITE_NAME}        PRIVATE $<$<OR:$<COMPILE_LANGUAGE:C>,$<COMPILE_LANGUAGE:CXX>>:${_TENGINE_DEBUG_DEFINES}>)
+endif()
+unset (_TENGINE_DEBUG_DEFINES)
 
-SET_PROPERTY(TARGET ${CMAKE_PROJECT_NAME}-static PROPERTY FOLDER "libtengine-lite")
-SET_PROPERTY(TARGET ${CMAKE_PROJECT_NAME} PROPERTY FOLDER "libtengine-lite")
+set_property(TARGET ${CMAKE_PROJECT_NAME}-static PROPERTY FOLDER "libtengine-lite")
+set_property(TARGET ${CMAKE_PROJECT_NAME} PROPERTY FOLDER "libtengine-lite")
 
 # install tengine libraries
-INSTALL (TARGETS ${CMAKE_PROJECT_NAME}-static DESTINATION lib)
-INSTALL (TARGETS ${CMAKE_PROJECT_NAME}        DESTINATION lib)
+install (TARGETS ${CMAKE_PROJECT_NAME}-static DESTINATION lib)
+install (TARGETS ${CMAKE_PROJECT_NAME}        DESTINATION lib)
 
-IF (TENGINE_STANDALONE_HCL)
-    INSTALL (TARGETS ${TENGINE_STANDALONE_HCL_LIB_NAME} DESTINATION lib)
-ENDIF()
+if (TENGINE_STANDALONE_HCL)
+    install (TARGETS ${TENGINE_STANDALONE_HCL_LIB_NAME} DESTINATION lib)
+endif()
 
 # install header files
-INSTALL (FILES ${CMAKE_SOURCE_DIR}/source/api/c_api.h DESTINATION include/tengine)
-INSTALL (FILES ${CMAKE_CURRENT_BINARY_DIR}/defines.h  DESTINATION include/tengine)
+install (FILES ${CMAKE_SOURCE_DIR}/source/api/c_api.h DESTINATION include/tengine)
+install (FILES ${CMAKE_CURRENT_BINARY_DIR}/defines.h  DESTINATION include/tengine)
 
-IF (TENGINE_BUILD_CPP_API)
-    INSTALL (FILES ${CMAKE_SOURCE_DIR}/source/api/cpp_api.h DESTINATION include/tengine)
-ENDIF()
+if (TENGINE_BUILD_CPP_API)
+    install (FILES ${CMAKE_SOURCE_DIR}/source/api/cpp_api.h DESTINATION include/tengine)
+endif()

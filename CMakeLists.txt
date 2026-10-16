@@ -20,85 +20,85 @@
 #
 
 # Check CMake version
-CMAKE_MINIMUM_REQUIRED (VERSION 3.13 FATAL_ERROR)
+cmake_minimum_required (VERSION 3.13 FATAL_ERROR)
 
 # Disable inplace builds to prevent source tree corruption.
-IF (" ${CMAKE_SOURCE_DIR}" STREQUAL " ${CMAKE_BINARY_DIR}")
-    MESSAGE (FATAL_ERROR "Tengine Fatal: Building inplace are not allowed. You should create a separate directory for Building.")
-ENDIF ()
+if (" ${CMAKE_SOURCE_DIR}" STREQUAL " ${CMAKE_BINARY_DIR}")
+    message (FATAL_ERROR "Tengine Fatal: Building inplace are not allowed. You should create a separate directory for Building.")
+endif ()
 
 # set cmake_install_prefix path
-IF (NOT DEFINED CMAKE_INSTALL_PREFIX)
-    SET (CMAKE_INSTALL_PREFIX "${CMAKE_BINARY_DIR}/install" CACHE PATH "Tengine Installation Directory")
-ENDIF()
+if (NOT DEFINED CMAKE_INSTALL_PREFIX)
+    set (CMAKE_INSTALL_PREFIX "${CMAKE_BINARY_DIR}/install" CACHE PATH "Tengine Installation Directory")
+endif()
 
 # Enable the languages which in use
-ENABLE_LANGUAGE (C CXX)
+enable_language (C CXX)
 
-IF (CMAKE_TOOLCHAIN_FILE)
-    SET (LIBRARY_OUTPUT_PATH_ROOT ${CMAKE_BINARY_DIR} CACHE PATH "root for library output, set this to change where android libs are compiled to")
+if (CMAKE_TOOLCHAIN_FILE)
+    set (LIBRARY_OUTPUT_PATH_ROOT ${CMAKE_BINARY_DIR} CACHE PATH "root for library output, set this to change where android libs are compiled to")
 
     # get absolute path, but get_filename_component ABSOLUTE only refer with source dir, so find_file here :(
-    GET_FILENAME_COMPONENT (CMAKE_TOOLCHAIN_FILE_NAME ${CMAKE_TOOLCHAIN_FILE} NAME)
-    FIND_FILE (CMAKE_TOOLCHAIN_FILE ${CMAKE_TOOLCHAIN_FILE_NAME} PATHS ${CMAKE_SOURCE_DIR} NO_DEFAULT_PATH)
-    MESSAGE (STATUS "Using CMake tool chain file ${CMAKE_TOOLCHAIN_FILE}")
-ENDIF()
+    get_filename_component (CMAKE_TOOLCHAIN_FILE_NAME ${CMAKE_TOOLCHAIN_FILE} NAME)
+    find_file (CMAKE_TOOLCHAIN_FILE ${CMAKE_TOOLCHAIN_FILE_NAME} PATHS ${CMAKE_SOURCE_DIR} NO_DEFAULT_PATH)
+    message (STATUS "Using CMake tool chain file ${CMAKE_TOOLCHAIN_FILE}")
+endif()
 
-IF (NOT CMAKE_BUILD_TYPE)
-    SET (CMAKE_BUILD_TYPE release CACHE STRING "Choose the type of build" FORCE)
-ENDIF()
+if (NOT CMAKE_BUILD_TYPE)
+    set (CMAKE_BUILD_TYPE release CACHE STRING "Choose the type of build" FORCE)
+endif()
 
 # All build options are defined in cmake/options.cmake, grouped by purpose
-INCLUDE ("${CMAKE_CURRENT_SOURCE_DIR}/cmake/options.cmake")
+include ("${CMAKE_CURRENT_SOURCE_DIR}/cmake/options.cmake")
 
 # Do check list
-INCLUDE ("${CMAKE_CURRENT_SOURCE_DIR}/cmake/check.cmake")
-INCLUDE ("${CMAKE_CURRENT_SOURCE_DIR}/cmake/cuda.cmake")
-INCLUDE ("${CMAKE_CURRENT_SOURCE_DIR}/cmake/torch.cmake")
-INCLUDE ("${CMAKE_CURRENT_SOURCE_DIR}/cmake/utility.cmake")
+include ("${CMAKE_CURRENT_SOURCE_DIR}/cmake/check.cmake")
+include ("${CMAKE_CURRENT_SOURCE_DIR}/cmake/cuda.cmake")
+include ("${CMAKE_CURRENT_SOURCE_DIR}/cmake/torch.cmake")
+include ("${CMAKE_CURRENT_SOURCE_DIR}/cmake/utility.cmake")
 
 # Project name
-PROJECT (tengine-lite)
+project (tengine-lite)
 
 # enable assembly language
-ENABLE_LANGUAGE (ASM)
+enable_language (ASM)
 
 # Enable cmake ctest module
-ENABLE_TESTING ()
+enable_testing ()
 
 # Set cmake default folder name
-SET_PROPERTY(GLOBAL PROPERTY USE_FOLDERS ON)
-SET_PROPERTY(GLOBAL PROPERTY PREDEFINED_TARGETS_FOLDER "cmake")
+set_property(GLOBAL PROPERTY USE_FOLDERS ON)
+set_property(GLOBAL PROPERTY PREDEFINED_TARGETS_FOLDER "cmake")
 
 # Main source files
-ADD_SUBDIRECTORY (source)
+add_subdirectory (source)
 
 # Internal modules, not for open source part
-INCLUDE (internal/extension.cmake OPTIONAL)
+include (internal/extension.cmake OPTIONAL)
 
-IF (TENGINE_BUILD_BENCHMARK)
-    ADD_SUBDIRECTORY(benchmark)
-ENDIF()
+if (TENGINE_BUILD_BENCHMARK)
+    add_subdirectory(benchmark)
+endif()
 
-IF (TENGINE_BUILD_EXAMPLES)
-    ADD_SUBDIRECTORY(examples)
-ENDIF()
+if (TENGINE_BUILD_EXAMPLES)
+    add_subdirectory(examples)
+endif()
 
-IF (TENGINE_BUILD_DEMO)
-    ADD_SUBDIRECTORY(demos)
-ENDIF()
+if (TENGINE_BUILD_DEMO)
+    add_subdirectory(demos)
+endif()
 
-IF (TENGINE_BUILD_TESTS)
-    ADD_SUBDIRECTORY(tests)
-ENDIF()
+if (TENGINE_BUILD_TESTS)
+    add_subdirectory(tests)
+endif()
 
-IF (TENGINE_BUILD_QUANT_TOOL)
-    ADD_SUBDIRECTORY(tools/quantize)
-ENDIF()
+if (TENGINE_BUILD_QUANT_TOOL)
+    add_subdirectory(tools/quantize)
+endif()
 
-IF (TENGINE_BUILD_CONVERT_TOOL)
-    ADD_SUBDIRECTORY(tools/convert_tool)
-ENDIF()
+if (TENGINE_BUILD_CONVERT_TOOL)
+    add_subdirectory(tools/convert_tool)
+endif()
 
 # Report summary
-INCLUDE ("${CMAKE_CURRENT_SOURCE_DIR}/cmake/summary.cmake")
+include ("${CMAKE_CURRENT_SOURCE_DIR}/cmake/summary.cmake")

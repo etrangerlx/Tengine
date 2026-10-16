@@ -1,7 +1,7 @@
 # generate tengine header file
-FILE (MAKE_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/tengine)
-FILE (COPY ${CMAKE_SOURCE_DIR}/source/api/c_api.h DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/tengine)
-FILE (COPY ${CMAKE_SOURCE_DIR}/source/api/c_api_ex.h DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/tengine)
+file (MAKE_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/tengine)
+file (COPY ${CMAKE_SOURCE_DIR}/source/api/c_api.h DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/tengine)
+file (COPY ${CMAKE_SOURCE_DIR}/source/api/c_api_ex.h DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/tengine)
 
 if (TENGINE_ENABLE_OPENDLA)
     function (tengine_opendla_op_test name file)
@@ -25,7 +25,7 @@ if (TENGINE_ENABLE_OPENDLA)
         add_test (${name} ${name})
 
         # add to a virtual project group
-        SET_PROPERTY(TARGET ${name} PROPERTY FOLDER "tests/test_opendla")
+        set_property(TARGET ${name} PROPERTY FOLDER "tests/test_opendla")
     endfunction()
 
     tengine_opendla_op_test(test_opendla_op_concat              op/test_opendla_op_concat.cpp)
@@ -64,7 +64,7 @@ if (TENGINE_ENABLE_TIM_VX)
         add_test (${name} ${name})
 
         # add to a virtual project group
-        SET_PROPERTY(TARGET ${name} PROPERTY FOLDER "tests/test_timvx")
+        set_property(TARGET ${name} PROPERTY FOLDER "tests/test_timvx")
     endfunction()
 
     tengine_timvx_op_test(test_timvx_op_clip            op/test_timvx_op_clip.cpp)
@@ -104,24 +104,24 @@ if (TENGINE_ENABLE_TIM_VX)
     
     
     # timvx model test, need opencv
-    FIND_PACKAGE(OpenCV QUIET)
-    IF (OpenCV_FOUND)
+    find_package(OpenCV QUIET)
+    if (OpenCV_FOUND)
         # macro for adding examples
-        FUNCTION (TENGINE_TIMVX_MODEL_TEST name file)
-            ADD_EXECUTABLE (${name} "${CMAKE_CURRENT_SOURCE_DIR}/${file}" "${CMAKE_CURRENT_SOURCE_DIR}/common/tengine_operations.c")
+        function (TENGINE_TIMVX_MODEL_TEST name file)
+            add_executable (${name} "${CMAKE_CURRENT_SOURCE_DIR}/${file}" "${CMAKE_CURRENT_SOURCE_DIR}/common/tengine_operations.c")
 
-            TARGET_INCLUDE_DIRECTORIES (${name} PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}")
-            TARGET_INCLUDE_DIRECTORIES (${name} PRIVATE "${CMAKE_CURRENT_BINARY_DIR}")
-            TARGET_INCLUDE_DIRECTORIES (${name} PRIVATE "${PROJECT_SOURCE_DIR}/tests/common")
+            target_include_directories (${name} PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}")
+            target_include_directories (${name} PRIVATE "${CMAKE_CURRENT_BINARY_DIR}")
+            target_include_directories (${name} PRIVATE "${PROJECT_SOURCE_DIR}/tests/common")
 
-            TARGET_LINK_LIBRARIES (${name} ${CMAKE_PROJECT_NAME} ${OpenCV_LIBS})
-            INSTALL (TARGETS ${name} DESTINATION bin)
-        ENDFUNCTION()
+            target_link_libraries (${name} ${CMAKE_PROJECT_NAME} ${OpenCV_LIBS})
+            install (TARGETS ${name} DESTINATION bin)
+        endfunction()
 
-        TENGINE_TIMVX_MODEL_TEST (test_timvx_model_yolov5s     models/test_timvx_model_yolov5s.cpp)
-    ELSE()
-        MESSAGE (WARNING "OpenCV not found, some examples won't be built")
-    ENDIF()    
+        tengine_timvx_model_test (test_timvx_model_yolov5s     models/test_timvx_model_yolov5s.cpp)
+    else()
+        message (WARNING "OpenCV not found, some examples won't be built")
+    endif()    
 endif()
 
 
@@ -147,7 +147,7 @@ if (TENGINE_ENABLE_TENSORRT)
         add_test (${name} ${name})
 
         # add to a virtual project group
-        SET_PROPERTY(TARGET ${name} PROPERTY FOLDER "tests/test_tensorrt")
+        set_property(TARGET ${name} PROPERTY FOLDER "tests/test_tensorrt")
     endfunction()
 
     tengine_tensorrt_op_test(test_tensorrt_op_clip          op/test_tensorrt_op_clip.cpp)
@@ -180,7 +180,7 @@ if (TENGINE_ENABLE_TORCH)
         add_test (${name} ${name})
 
         # add to a virtual project group
-        SET_PROPERTY(TARGET ${name} PROPERTY FOLDER "tests/test_torch")
+        set_property(TARGET ${name} PROPERTY FOLDER "tests/test_torch")
     endfunction()
 
     tengine_torch_op_test(test_torch_op_conv          op/test_torch_op_conv.cpp)
@@ -206,7 +206,7 @@ if(PROTOBUF_FOUND)
         add_test (${name} ${name})
 
         # add to a virtual project group
-        SET_PROPERTY(TARGET ${name} PROPERTY FOLDER "tests/test_onnx")
+        set_property(TARGET ${name} PROPERTY FOLDER "tests/test_onnx")
     endfunction()
 
     tengine_onnx_op_test(test_onnx_op_abs                           op/test_onnx_op_abs.cpp)
@@ -300,43 +300,43 @@ else()
 endif()
 
 
-FUNCTION (TENGINE_MODEL_TEST name file)
-    ADD_EXECUTABLE (${name} "${CMAKE_CURRENT_SOURCE_DIR}/${file}" "${CMAKE_CURRENT_SOURCE_DIR}/common/tengine_operations.c")
+function (TENGINE_MODEL_TEST name file)
+    add_executable (${name} "${CMAKE_CURRENT_SOURCE_DIR}/${file}" "${CMAKE_CURRENT_SOURCE_DIR}/common/tengine_operations.c")
 
-    TARGET_INCLUDE_DIRECTORIES (${name} PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}")
-    TARGET_INCLUDE_DIRECTORIES (${name} PRIVATE "${CMAKE_CURRENT_BINARY_DIR}")
-    TARGET_INCLUDE_DIRECTORIES (${name} PRIVATE "${PROJECT_SOURCE_DIR}/tests/common")
+    target_include_directories (${name} PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}")
+    target_include_directories (${name} PRIVATE "${CMAKE_CURRENT_BINARY_DIR}")
+    target_include_directories (${name} PRIVATE "${PROJECT_SOURCE_DIR}/tests/common")
 
-    TARGET_LINK_LIBRARIES (${name} PRIVATE ${CMAKE_PROJECT_NAME})
-    TARGET_LINK_LIBRARIES (${name} PRIVATE m)
+    target_link_libraries (${name} PRIVATE ${CMAKE_PROJECT_NAME})
+    target_link_libraries (${name} PRIVATE m)
 
     # add to a virtual project group
-    SET_PROPERTY(TARGET ${name} PROPERTY FOLDER "tests/test_model")
+    set_property(TARGET ${name} PROPERTY FOLDER "tests/test_model")
 
-ENDFUNCTION()
+endfunction()
 
 # add c api examples
-TENGINE_MODEL_TEST (test_model_alphapose            models/test_model_alphapose.cpp)
-TENGINE_MODEL_TEST (test_model_classification       models/test_model_classification.cpp)
-TENGINE_MODEL_TEST (test_model_crnn                 models/test_model_crnn.cpp)
-TENGINE_MODEL_TEST (test_model_efficientdet         models/test_model_efficientdet.c)
-TENGINE_MODEL_TEST (test_model_hrnet                models/test_model_hrnet.cpp)
-TENGINE_MODEL_TEST (test_model_landmark             models/test_model_landmark.cpp)
-TENGINE_MODEL_TEST (test_model_mobilefacenet        models/test_model_mobilefacenet.cpp)
-TENGINE_MODEL_TEST (test_model_mobilenet_ssd        models/test_model_mobilenet_ssd.c)
-TENGINE_MODEL_TEST (test_model_nanodet_m            models/test_model_nanodet_m.cpp)
-TENGINE_MODEL_TEST (test_model_openpose             models/test_model_openpose.cpp)
-TENGINE_MODEL_TEST (test_model_retinaface           models/test_model_retinaface.cpp)
-TENGINE_MODEL_TEST (test_model_ultraface            models/test_model_ultraface.cpp)
-TENGINE_MODEL_TEST (test_model_unet                 models/test_model_unet.cpp)
-TENGINE_MODEL_TEST (test_model_yolact               models/test_model_yolact.cpp)
-TENGINE_MODEL_TEST (test_model_yolofastest          models/test_model_yolofastest.cpp)
-TENGINE_MODEL_TEST (test_model_yolov3               models/test_model_yolov3.cpp)
-TENGINE_MODEL_TEST (test_model_yolov3_tiny          models/test_model_yolov3_tiny.cpp)
-TENGINE_MODEL_TEST (test_model_yolov4               models/test_model_yolov4.cpp)
-TENGINE_MODEL_TEST (test_model_yolov4_tiny          models/test_model_yolov4_tiny.cpp)
-TENGINE_MODEL_TEST (test_model_yolov5s              models/test_model_yolov5s.cpp)
-TENGINE_MODEL_TEST (test_model_common               models/test_model_common.cpp)
-IF(TENGINE_ENABLE_TENSORRT)
-    TENGINE_MODEL_TEST (test_trt_model_classification       models/test_trt_model_classification.cpp)
-ENDIF()
+tengine_model_test (test_model_alphapose            models/test_model_alphapose.cpp)
+tengine_model_test (test_model_classification       models/test_model_classification.cpp)
+tengine_model_test (test_model_crnn                 models/test_model_crnn.cpp)
+tengine_model_test (test_model_efficientdet         models/test_model_efficientdet.c)
+tengine_model_test (test_model_hrnet                models/test_model_hrnet.cpp)
+tengine_model_test (test_model_landmark             models/test_model_landmark.cpp)
+tengine_model_test (test_model_mobilefacenet        models/test_model_mobilefacenet.cpp)
+tengine_model_test (test_model_mobilenet_ssd        models/test_model_mobilenet_ssd.c)
+tengine_model_test (test_model_nanodet_m            models/test_model_nanodet_m.cpp)
+tengine_model_test (test_model_openpose             models/test_model_openpose.cpp)
+tengine_model_test (test_model_retinaface           models/test_model_retinaface.cpp)
+tengine_model_test (test_model_ultraface            models/test_model_ultraface.cpp)
+tengine_model_test (test_model_unet                 models/test_model_unet.cpp)
+tengine_model_test (test_model_yolact               models/test_model_yolact.cpp)
+tengine_model_test (test_model_yolofastest          models/test_model_yolofastest.cpp)
+tengine_model_test (test_model_yolov3               models/test_model_yolov3.cpp)
+tengine_model_test (test_model_yolov3_tiny          models/test_model_yolov3_tiny.cpp)
+tengine_model_test (test_model_yolov4               models/test_model_yolov4.cpp)
+tengine_model_test (test_model_yolov4_tiny          models/test_model_yolov4_tiny.cpp)
+tengine_model_test (test_model_yolov5s              models/test_model_yolov5s.cpp)
+tengine_model_test (test_model_common               models/test_model_common.cpp)
+if(TENGINE_ENABLE_TENSORRT)
+    tengine_model_test (test_trt_model_classification       models/test_trt_model_classification.cpp)
+endif()

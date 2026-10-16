@@ -19,15 +19,15 @@
 # Author: qtang@openailab.com
 #
 
-UNSET (TENGINE_TOOL_OPTIONS)
-UNSET (TENGINE_TOOL_LINK_LIBRARIES)
+unset (TENGINE_TOOL_OPTIONS)
+unset (TENGINE_TOOL_LINK_LIBRARIES)
 
-FIND_PACKAGE(OpenCV REQUIRED COMPONENTS core imgcodecs imgproc)
+find_package(OpenCV REQUIRED COMPONENTS core imgcodecs imgproc)
 
-IF (${TENGINE_TARGET_PROCESSOR} MATCHES "X86")
+if (${TENGINE_TARGET_PROCESSOR} MATCHES "X86")
     # macro for adding quant tool
-    FUNCTION (TENGINE_QUANT_TOOL name file)
-        ADD_EXECUTABLE(
+    function (TENGINE_QUANT_TOOL name file)
+        add_executable(
             ${name}
             ./quant_save_graph.cpp
             ./algorithm/quant_dfq.cpp
@@ -37,33 +37,33 @@ IF (${TENGINE_TARGET_PROCESSOR} MATCHES "X86")
             ../save_graph/tm2_op_save.cpp
             ../save_graph/tm2_generate.c
             "${CMAKE_CURRENT_SOURCE_DIR}/${file}")
-        TARGET_INCLUDE_DIRECTORIES (${name} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
-        TARGET_INCLUDE_DIRECTORIES (${name} PRIVATE ${CMAKE_CURRENT_BINARY_DIR})       
-        TARGET_INCLUDE_DIRECTORIES (${name} PRIVATE "${PROJECT_BINARY_DIR}")     
-        TARGET_INCLUDE_DIRECTORIES (${name} PRIVATE "${PROJECT_BINARY_DIR}/source")
-        TARGET_INCLUDE_DIRECTORIES (${name} PRIVATE "${PROJECT_SOURCE_DIR}/source")
-        TARGET_INCLUDE_DIRECTORIES (${name} PRIVATE "${PROJECT_SOURCE_DIR}/source/operator/prototype")       
-        TARGET_INCLUDE_DIRECTORIES (${name} PRIVATE "${PROJECT_SOURCE_DIR}/tools/quantize/common")
-        TARGET_INCLUDE_DIRECTORIES (${name} PRIVATE "${PROJECT_SOURCE_DIR}/tools/save_graph")
+        target_include_directories (${name} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
+        target_include_directories (${name} PRIVATE ${CMAKE_CURRENT_BINARY_DIR})       
+        target_include_directories (${name} PRIVATE "${PROJECT_BINARY_DIR}")     
+        target_include_directories (${name} PRIVATE "${PROJECT_BINARY_DIR}/source")
+        target_include_directories (${name} PRIVATE "${PROJECT_SOURCE_DIR}/source")
+        target_include_directories (${name} PRIVATE "${PROJECT_SOURCE_DIR}/source/operator/prototype")       
+        target_include_directories (${name} PRIVATE "${PROJECT_SOURCE_DIR}/tools/quantize/common")
+        target_include_directories (${name} PRIVATE "${PROJECT_SOURCE_DIR}/tools/save_graph")
 
-        IF (${TENGINE_COVERAGE})
-            LIST (APPEND TENGINE_TOOL_OPTIONS "-fprofile-arcs")
-            LIST (APPEND TENGINE_TOOL_OPTIONS "-ftest-coverage")
-            LIST (APPEND TENGINE_TOOL_LINK_LIBRARIES -coverage)
-            LIST (APPEND TENGINE_TOOL_LINK_LIBRARIES -lgcov)
-        ENDIF()
-        TARGET_COMPILE_OPTIONS (${name} PRIVATE ${TENGINE_TOOL_OPTIONS})
-        TARGET_LINK_LIBRARIES (${name} PRIVATE ${CMAKE_PROJECT_NAME}-static ${OpenCV_LIBS} ${TENGINE_TOOL_LINK_LIBRARIES})
+        if (${TENGINE_COVERAGE})
+            list (APPEND TENGINE_TOOL_OPTIONS "-fprofile-arcs")
+            list (APPEND TENGINE_TOOL_OPTIONS "-ftest-coverage")
+            list (APPEND TENGINE_TOOL_LINK_LIBRARIES -coverage)
+            list (APPEND TENGINE_TOOL_LINK_LIBRARIES -lgcov)
+        endif()
+        target_compile_options (${name} PRIVATE ${TENGINE_TOOL_OPTIONS})
+        target_link_libraries (${name} PRIVATE ${CMAKE_PROJECT_NAME}-static ${OpenCV_LIBS} ${TENGINE_TOOL_LINK_LIBRARIES})
 
-        INSTALL (TARGETS ${name} DESTINATION bin)
+        install (TARGETS ${name} DESTINATION bin)
 
         # add to a virtual project group
-        SET_PROPERTY(TARGET ${name} PROPERTY FOLDER "tools/quant_tool")
-    ENDFUNCTION()
+        set_property(TARGET ${name} PROPERTY FOLDER "tools/quant_tool")
+    endfunction()
 
-    TENGINE_QUANT_TOOL(quant_tool_int8      quant_tool_int8.cpp)
-    TENGINE_QUANT_TOOL(quant_tool_uint8     quant_tool_uint8.cpp)
-    TENGINE_QUANT_TOOL(quant_tool_uint8_perchannel     quant_tool_uint8_perchannel.cpp)
-ELSE()
-    MESSAGE (FATAL_ERROR "quantization tool can only be built on x86")
-ENDIF()
+    tengine_quant_tool(quant_tool_int8      quant_tool_int8.cpp)
+    tengine_quant_tool(quant_tool_uint8     quant_tool_uint8.cpp)
+    tengine_quant_tool(quant_tool_uint8_perchannel     quant_tool_uint8_perchannel.cpp)
+else()
+    message (FATAL_ERROR "quantization tool can only be built on x86")
+endif()

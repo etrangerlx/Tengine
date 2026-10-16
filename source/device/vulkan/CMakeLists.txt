@@ -1,12 +1,12 @@
 # 0. clear var
-UNSET (_DEV_VULKAN_HEADER_PATH)
-UNSET (_VULKAN_BASE_SOURCE)
-UNSET (_VULKAN_OPS_SOURCE)
-UNSET (_DEV_VULKAN_DEVICE_SOURCE)
-UNSET (_DEV_VULKAN_COMPILER_DEFINES)
-UNSET (_DEV_VULKAN_COMPILER_OPTIONS)
-UNSET (_DEV_VULKAN_LINKER_OPTIONS)
-UNSET (_DEV_VULKAN_LINK_LIBRARIES)
+unset (_DEV_VULKAN_HEADER_PATH)
+unset (_VULKAN_BASE_SOURCE)
+unset (_VULKAN_OPS_SOURCE)
+unset (_DEV_VULKAN_DEVICE_SOURCE)
+unset (_DEV_VULKAN_COMPILER_DEFINES)
+unset (_DEV_VULKAN_COMPILER_OPTIONS)
+unset (_DEV_VULKAN_LINKER_OPTIONS)
+unset (_DEV_VULKAN_LINK_LIBRARIES)
 
 
 
@@ -104,7 +104,7 @@ add_layer(Crop)
 add_custom_target(generate-spirv DEPENDS ${SHADER_SPV_HEX_FILES})
 
 # add to a virtual project group
-SET_PROPERTY(TARGET generate-spirv PROPERTY FOLDER "libtengine-lite")
+set_property(TARGET generate-spirv PROPERTY FOLDER "libtengine-lite")
 
 # create new registry file
 configure_file(layer_shader_registry.h.in   ${CMAKE_CURRENT_BINARY_DIR}/layer_shader_registry.h)
@@ -117,58 +117,58 @@ set(VULKAN_LIBRARY "/usr/lib/x86_64-linux-gnu/" CACHE INTERNAL " " FORCE)
 set(VULKAN_INCLUDE_DIRS "/usr/include/vulkan/" CACHE INTERNAL " " FORCE)
 
 # 1.  set source root path
-SET(_VULKAN_ROOT ${CMAKE_SOURCE_DIR}/source/device/vulkan)
-SET(_VULKAN_BUILD_ROOT ${CMAKE_CURRENT_BINARY_DIR})
+set(_VULKAN_ROOT ${CMAKE_SOURCE_DIR}/source/device/vulkan)
+set(_VULKAN_BUILD_ROOT ${CMAKE_CURRENT_BINARY_DIR})
 
 
 # 2.  add header file path
-LIST (APPEND _DEV_VULKAN_HEADER_PATH           ${_VULKAN_BUILD_ROOT})
-LIST (APPEND _DEV_VULKAN_HEADER_PATH           ${_VULKAN_ROOT})
-LIST (APPEND _DEV_VULKAN_HEADER_PATH           ${VULKAN_INCLUDE_DIRS})
+list (APPEND _DEV_VULKAN_HEADER_PATH           ${_VULKAN_BUILD_ROOT})
+list (APPEND _DEV_VULKAN_HEADER_PATH           ${_VULKAN_ROOT})
+list (APPEND _DEV_VULKAN_HEADER_PATH           ${VULKAN_INCLUDE_DIRS})
 
 
 # 3.  add linking lib searching path
-LIST (APPEND _DEV_VULKAN_LINK_PATH             ${VULKAN_LIBRARY})
+list (APPEND _DEV_VULKAN_LINK_PATH             ${VULKAN_LIBRARY})
 
 
 # 4.  add source files
-AUX_SOURCE_DIRECTORY("${_VULKAN_ROOT}"         _VULKAN_BASE_SOURCE)
-AUX_SOURCE_DIRECTORY("${_VULKAN_ROOT}/layer"      _VULKAN_OPS_SOURCE)
-LIST (APPEND _DEV_VULKAN_DEVICE_SOURCE         ${_VULKAN_BASE_SOURCE})
-LIST (APPEND _DEV_VULKAN_DEVICE_SOURCE         ${_VULKAN_OPS_SOURCE})
+aux_source_directory("${_VULKAN_ROOT}"         _VULKAN_BASE_SOURCE)
+aux_source_directory("${_VULKAN_ROOT}/layer"      _VULKAN_OPS_SOURCE)
+list (APPEND _DEV_VULKAN_DEVICE_SOURCE         ${_VULKAN_BASE_SOURCE})
+list (APPEND _DEV_VULKAN_DEVICE_SOURCE         ${_VULKAN_OPS_SOURCE})
 
 
 # 5.  add build options for cpu device
 # 5.1 is a gcc or clang like compiler
-IF (TENGINE_COMPILER_GCC OR TENGINE_COMPILER_CLANG)
-    IF (TENGINE_COMPILER_GCC AND (${CMAKE_CXX_COMPILER_VERSION} VERSION_GREATER_EQUAL "6.1"))
-        LIST (APPEND _DEV_VULKAN_COMPILER_OPTIONS -Wno-ignored-attributes)
-    ENDIF()
-ENDIF()
+if (TENGINE_COMPILER_GCC OR TENGINE_COMPILER_CLANG)
+    if (TENGINE_COMPILER_GCC AND (${CMAKE_CXX_COMPILER_VERSION} VERSION_GREATER_EQUAL "6.1"))
+        list (APPEND _DEV_VULKAN_COMPILER_OPTIONS -Wno-ignored-attributes)
+    endif()
+endif()
 
 
 # 5.2 is Microsoft Visual C++
-IF (TENGINE_COMPILER_MSVC)
-ENDIF()
+if (TENGINE_COMPILER_MSVC)
+endif()
 
 
 # 6.  add link options
 
 
 # 7.  add link libs
-LIST (APPEND _DEV_VULKAN_LINK_LIBRARIES   "libvulkan.so")
+list (APPEND _DEV_VULKAN_LINK_LIBRARIES   "libvulkan.so")
 
 
 # 8. set all to cmake cache
-SET (TENGINE_VULKAN_HEADER_PATH       ${_DEV_VULKAN_HEADER_PATH}        CACHE INTERNAL  "Tengine VULKAN device header files searching path"   FORCE)
-SET (TENGINE_VULKAN_LINK_PATH         ${_DEV_VULKAN_LINK_PATH}          CACHE INTERNAL  "Tengine VULKAN device link libraries searching path" FORCE)
-SET (TENGINE_VULKAN_DEVICE_SOURCE     ${_DEV_VULKAN_DEVICE_SOURCE}      CACHE INTERNAL  "Tengine VULKAN device main source files"             FORCE)
-SET (TENGINE_VULKAN_COMPILER_DEFINES  ${_DEV_VULKAN_COMPILER_DEFINES}   CACHE INTERNAL  "Tengine VULKAN about compiler defines"               FORCE)
-SET (TENGINE_VULKAN_COMPILER_OPTIONS  ${_DEV_VULKAN_COMPILER_OPTIONS}   CACHE INTERNAL  "Tengine VULKAN about compiler options"               FORCE)
-SET (TENGINE_VULKAN_LINKER_OPTIONS    ${_DEV_VULKAN_LINKER_OPTIONS}     CACHE INTERNAL  "Tengine VULKAN about linker options"                 FORCE)
-SET (TENGINE_VULKAN_LINK_LIBRARIES    ${_DEV_VULKAN_LINK_LIBRARIES}     CACHE INTERNAL  "Tengine VULKAN about link libraries"                 FORCE)
-SET (TENGINE_VULKAN_DEPENDS_FORWARD   generate-spirv                    CACHE INTERNAL  "Tengine VULKAN about depends project"                FORCE)
+set (TENGINE_VULKAN_HEADER_PATH       ${_DEV_VULKAN_HEADER_PATH}        CACHE INTERNAL  "Tengine VULKAN device header files searching path"   FORCE)
+set (TENGINE_VULKAN_LINK_PATH         ${_DEV_VULKAN_LINK_PATH}          CACHE INTERNAL  "Tengine VULKAN device link libraries searching path" FORCE)
+set (TENGINE_VULKAN_DEVICE_SOURCE     ${_DEV_VULKAN_DEVICE_SOURCE}      CACHE INTERNAL  "Tengine VULKAN device main source files"             FORCE)
+set (TENGINE_VULKAN_COMPILER_DEFINES  ${_DEV_VULKAN_COMPILER_DEFINES}   CACHE INTERNAL  "Tengine VULKAN about compiler defines"               FORCE)
+set (TENGINE_VULKAN_COMPILER_OPTIONS  ${_DEV_VULKAN_COMPILER_OPTIONS}   CACHE INTERNAL  "Tengine VULKAN about compiler options"               FORCE)
+set (TENGINE_VULKAN_LINKER_OPTIONS    ${_DEV_VULKAN_LINKER_OPTIONS}     CACHE INTERNAL  "Tengine VULKAN about linker options"                 FORCE)
+set (TENGINE_VULKAN_LINK_LIBRARIES    ${_DEV_VULKAN_LINK_LIBRARIES}     CACHE INTERNAL  "Tengine VULKAN about link libraries"                 FORCE)
+set (TENGINE_VULKAN_DEPENDS_FORWARD   generate-spirv                    CACHE INTERNAL  "Tengine VULKAN about depends project"                FORCE)
 
 
 # 9. install device option
-INSTALL (FILES ${_VULKAN_ROOT}/VULKAN_define.h DESTINATION include/tengine RENAME VULKAN_device.h)
+install (FILES ${_VULKAN_ROOT}/VULKAN_define.h DESTINATION include/tengine RENAME VULKAN_device.h)

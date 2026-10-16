@@ -16,38 +16,32 @@
 # under the License.
 #
 # Copyright (c) 2021, OPEN AI LAB
-# Author: lswang@openailab.com
 #
-
-# unset for regeneration
-UNSET (_OP_HEADER_PATH)
-UNSET (_TENGINE_OP_SOURCE)
-
+# Operator module: NN operator registration framework and prototype operators
 
 SET (_OP_ROOT "${CMAKE_SOURCE_DIR}/source/operator")
 
-# generate header file searching path
-LIST (APPEND _OP_HEADER_PATH "${CMAKE_SOURCE_DIR}/source/operator/prototype")
+# operator framework source files (explicit list, add new files here)
+SET (_OP_LEVEL_SOURCE
+    "${_OP_ROOT}/op.c"
+)
+
+# prototype operators: one source file per operator, plugin style directory.
+# CONFIGURE_DEPENDS keeps the glob re-evaluated on rebuild.
+FILE (GLOB _OP_PROTOTYPE_SOURCE CONFIGURE_DEPENDS "${_OP_ROOT}/prototype/*.c")
 
 
-# config the operator prototype
-AUX_SOURCE_DIRECTORY("${_OP_ROOT}/prototype" _OP_PROTOTYPE_SOURCE)
+# legacy variable export, kept for compatibility with the device aggregator
+# and standalone HCL builds
+SET (TENGINE_OP_HEADER_PATH     "${_OP_ROOT}/prototype"                     CACHE INTERNAL "Tengine operator level header searching path"   FORCE)
+SET (TENGINE_OPERATOR_SOURCE    ${_OP_LEVEL_SOURCE} ${_OP_PROTOTYPE_SOURCE} CACHE INTERNAL "Tengine operator level source files"            FORCE)
 
 
-# operator level source files
-FILE (GLOB   _OP_LEVEL_SOURCE   "${CMAKE_SOURCE_DIR}/source/operator/*.c")
-
-
-# gather
-LIST (APPEND _TENGINE_OP_SOURCE ${_OP_LEVEL_SOURCE})
-LIST (APPEND _TENGINE_OP_SOURCE ${_OP_PROTOTYPE_SOURCE})
-
-
-# add to src group
+# IDE source groups
 TENGINE_SOURCE_GROUP ("operator"            ${_OP_LEVEL_SOURCE})
 TENGINE_SOURCE_GROUP ("operator/prototype"  ${_OP_PROTOTYPE_SOURCE})
 
 
-# set all to cache
-SET (TENGINE_OP_HEADER_PATH     ${_OP_HEADER_PATH}      CACHE INTERNAL "Tengine operator level header searching path"   FORCE)
-SET (TENGINE_OPERATOR_SOURCE    ${_TENGINE_OP_SOURCE}   CACHE INTERNAL "Tengine operator level source files"            FORCE)
+# module target
+ADD_LIBRARY (tengine_core_operator OBJECT ${_OP_LEVEL_SOURCE} ${_OP_PROTOTYPE_SOURCE})
+TARGET_LINK_LIBRARIES (tengine_core_operator PRIVATE tengine_build_config tengine_public_include)

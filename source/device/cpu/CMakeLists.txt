@@ -305,3 +305,17 @@ SET (TENGINE_CPU_HCL_SOURCE         ${_CPU_HCL_SOURCE}          CACHE INTERNAL  
 SET (TENGINE_CPU_COMPILER_DEFINES   ${_CPU_COMPILER_DEFINES}    CACHE INTERNAL  "Tengine CPU about compiler defines"                FORCE)
 SET (TENGINE_CPU_COMPILER_OPTIONS   ${_CPU_COMPILER_OPTIONS}    CACHE INTERNAL  "Tengine CPU about compiler options"                FORCE)
 SET (TENGINE_CPU_LINKER_OPTIONS     ${_CPU_LINKER_OPTIONS}      CACHE INTERNAL  "Tengine CPU about linker options"                  FORCE)
+
+
+# 10. module target: cpu device glue code, reference ops and high performance kernels
+# in standalone HCL mode the hcl kernels are built into a separate library
+SET (_CPU_TARGET_SOURCE ${_CPU_DEVICE_SOURCE} ${_CPU_REF_SOURCE})
+IF (NOT TENGINE_STANDALONE_HCL)
+    LIST (APPEND _CPU_TARGET_SOURCE ${_CPU_HCL_SOURCE})
+ENDIF()
+
+ADD_LIBRARY (tengine_device_cpu OBJECT ${_CPU_TARGET_SOURCE})
+TARGET_LINK_LIBRARIES (tengine_device_cpu PRIVATE tengine_build_config tengine_public_include)
+TARGET_INCLUDE_DIRECTORIES (tengine_device_cpu PRIVATE ${_DEV_CPU_HEADER_PATH})
+TARGET_COMPILE_DEFINITIONS (tengine_device_cpu PRIVATE ${_CPU_COMPILER_DEFINES})
+TARGET_COMPILE_OPTIONS (tengine_device_cpu PRIVATE ${_CPU_COMPILER_OPTIONS})

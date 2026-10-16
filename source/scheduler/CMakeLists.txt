@@ -16,27 +16,22 @@
 # under the License.
 #
 # Copyright (c) 2021, OPEN AI LAB
-# Author: lswang@openailab.com
 #
-
-#
-UNSET (_TENGINE_SCHEDULER_SOURCE)
-
+# Scheduler module: base and advanced scheduler for different backends
 
 SET (_SCH_ROOT "${CMAKE_SOURCE_DIR}/source/scheduler")
 
+# scheduler source files (explicit list, add new files here)
+SET (_SCH_LEVEL_SOURCE
+    "${_SCH_ROOT}/scheduler.c"
+)
 
-# scheduler level source files
-FILE (GLOB   _SCH_LEVEL_SOURCE  "${_SCH_ROOT}/*.c")
+# legacy variable export, kept for compatibility
+SET (TENGINE_SCHEDULER_SOURCE ${_SCH_LEVEL_SOURCE} CACHE INTERNAL "Tengine scheduler level source files" FORCE)
 
+# IDE source groups
+TENGINE_SOURCE_GROUP ("scheduler" ${_SCH_LEVEL_SOURCE})
 
-# gather
-LIST (APPEND _TENGINE_SCHEDULER_SOURCE  ${_SCH_LEVEL_SOURCE})
-
-
-#
-TENGINE_SOURCE_GROUP ("scheduler"    ${_SCH_LEVEL_SOURCE})
-
-
-# set all to cache
-SET (TENGINE_SCHEDULER_SOURCE ${_TENGINE_SCHEDULER_SOURCE} CACHE INTERNAL "Tengine scheduler level source files" FORCE)
+# module target
+ADD_LIBRARY (tengine_core_scheduler OBJECT ${_SCH_LEVEL_SOURCE})
+TARGET_LINK_LIBRARIES (tengine_core_scheduler PRIVATE tengine_build_config tengine_public_include)

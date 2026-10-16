@@ -35,6 +35,7 @@ struct tm2_priv
 {
     int fd; /* for file load */
     int mem_len;
+    int self_allocated; /* base 指向的内存是否由本模块分配：load_model 为 1，load_mem（用户内存）为 0 */
     const char* base;             /* mem base for model */
     const TM2_Header* header;     /* file header */
     const TM2_Model* model;       /* model header */

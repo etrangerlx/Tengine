@@ -22,6 +22,25 @@
  * Author: lswang@openailab.com
  */
 
+/*
+ * ============================== 新手导读 ==============================
+ * 模块注册中心：Tengine 用“注册表”模式组织三类可插拔组件：
+ *   - 序列化器（serializer）：读写各种模型文件格式；
+ *   - 设备（device）：CPU / GPU 等执行后端；
+ *   - 算子（op）：算子的名字与实现方法（init / release / infer_shape 等）。
+ *
+ * 每类组件一张全局 vector 注册表，接口都是同一套五件套：
+ *   initialize（懒创建表）-> register（注册）-> find（查找）
+ *   -> unregister（注销）-> release（清空整张表）。
+ *
+ * 特别注意两种存放方式的差别（容易踩坑）：
+ *   - 序列化器表 / 设备表：存的是“指针”，取出时要先按二级指针解引用：
+ *         xxx_t* p = *(xxx_t**)get_vector_data(reg, i);
+ *   - 算子名字表 / 算子方法表：直接存“结构体”，取出即结构体地址：
+ *         xxx_t* p = (xxx_t*)get_vector_data(reg, i);
+ * ======================================================================
+ */
+
 #include "module/module.h"
 
 #include "serializer/serializer.h"
@@ -34,6 +53,10 @@
 
 #include <stddef.h>
 #include <string.h>
+
+/* ------------------------------------------------------------------ */
+/* 全局注册表                                                           */
+/* ------------------------------------------------------------------ */
 
 static vector_t* internal_serializer_registry = NULL; //!< registry of model serializer
 static vector_t* internal_device_registry = NULL;     //!< registry of runnable neural network device
@@ -50,7 +73,9 @@ typedef struct op_name_entry
     const char* name; //!< the name of a operator
 } ir_op_name_entry_t;
 
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/* ------------------------------------------------------------------ */
+/* 第一部分：序列化器注册表（存指针）                                    */
+/* ------------------------------------------------------------------ */
 
 static int initialize_serializer_registry(const char* name)
 {
@@ -76,6 +101,7 @@ int register_serializer(serializer_t* serializer)
         return -1;
     }
 
+    /* 序列化器自带 init 回调，注册时先执行一次 */
     if (NULL != serializer->init)
     {
         int ret = serializer->init(serializer);
@@ -111,6 +137,7 @@ serializer_t* find_serializer_via_name(const char* name)
         return NULL;
     }
 
+    /* 表里存的是指针：取出时按二级指针解引用 */
     for (int i = 0; i < count; i++)
     {
         serializer_t* serializer = *(serializer_t**)get_vector_data(internal_serializer_registry, i);
@@ -160,6 +187,7 @@ int unregister_serializer(serializer_t* serializer)
         return -1;
     }
 
+    /* 先确认注册表里的确有这个序列化器，且和传入的是同一个 */
     serializer_t* result = find_serializer_via_name(serializer->get_name(serializer));
     if (NULL == result)
     {
@@ -189,7 +217,7 @@ int release_serializer_registry()
 {
     while (get_vector_num(internal_serializer_registry) > 0)
     {
-        serializer_t* serializer = (serializer_t*)get_vector_data(internal_serializer_registry, 0);
+        serializer_t* serializer = *(serializer_t**)get_vector_data(internal_serializer_registry, 0);
         unregister_serializer(serializer);
     }
 
@@ -199,7 +227,9 @@ int release_serializer_registry()
     return 0;
 }
 
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/* ------------------------------------------------------------------ */
+/* 第二部分：设备注册表（存指针）                                        */
+/* ------------------------------------------------------------------ */
 
 static int initialize_device_registry(const char* name)
 {
@@ -231,6 +261,7 @@ ir_device_t* find_device_via_name(const char* name)
         return NULL;
     }
 
+    /* 表里存的是指针：取出时按二级指针解引用 */
     for (int i = 0; i < count; i++)
     {
         ir_device_t* device = *(ir_device_t**)get_vector_data(internal_device_registry, i);
@@ -256,7 +287,7 @@ ir_device_t* find_device_via_index(int index)
 
     if (0 <= index && index < count)
     {
-        ir_device_t* device = (ir_device_t*)get_vector_data(internal_device_registry, index);
+        ir_device_t* device = *(ir_device_t**)get_vector_data(internal_device_registry, index);
         return device;
     }
     else
@@ -286,6 +317,7 @@ int register_device(ir_device_t* device)
         return -1;
     }
 
+    /* 设备接口自带 init 回调，注册时先执行一次 */
     if (NULL != device->interface && NULL != device->interface->init)
     {
         int ret = device->interface->init(device);
@@ -325,7 +357,7 @@ int release_device_registry()
 {
     while (get_vector_num(internal_device_registry) > 0)
     {
-        ir_device_t* device = (ir_device_t*)get_vector_data(internal_device_registry, 0);
+        ir_device_t* device = *(ir_device_t**)get_vector_data(internal_device_registry, 0);
         unregister_device(device);
     }
 
@@ -335,7 +367,9 @@ int release_device_registry()
     return 0;
 }
 
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/* ------------------------------------------------------------------ */
+/* 第三部分：算子名字表（直接存结构体）                                  */
+/* ------------------------------------------------------------------ */
 
 int initialize_op_name_registry(const char* name)
 {
@@ -406,6 +440,10 @@ int release_op_name_registry()
     return 0;
 }
 
+/* ------------------------------------------------------------------ */
+/* 第四部分：算子方法表（直接存结构体）                                  */
+/* ------------------------------------------------------------------ */
+
 static int initialize_op_registry(const char* name)
 {
     if (NULL == internal_op_method_registry)
@@ -421,6 +459,7 @@ static int initialize_op_registry(const char* name)
     return 0;
 }
 
+/* 同一算子的同一版本不允许重复注册 */
 static int register_op_registry(ir_method_t* method)
 {
     if (find_op_method(method->type, method->version))
@@ -431,6 +470,11 @@ static int register_op_registry(ir_method_t* method)
     return push_vector_data(internal_op_method_registry, method);
 }
 
+/*
+ * 注册一个算子：名字和方法都可以只注册其一。
+ * - 传了 name：登记“类型 -> 名字”的映射；
+ * - 传了 method：登记算子方法，并把 method->type 统一为传入的 type。
+ */
 int register_op(int type, const char* name, ir_method_t* method)
 {
     initialize_op_registry(name);
@@ -517,6 +561,12 @@ int get_op_method_count()
     }
 }
 
+/*
+ * 注销算子方法：
+ * - version 为 0：删除该类型的所有版本（外层按匹配个数循环多轮）；
+ * - version 非 0：碰到该类型的第一个条目就结束（版本号匹配则删除）。
+ * 最后注销对应的算子名字。
+ */
 int unregister_op(int type, int version)
 {
     int matched_count = 0;

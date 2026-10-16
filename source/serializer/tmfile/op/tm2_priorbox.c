@@ -22,6 +22,14 @@
  * Author: haitao@openailab.com
  */
 
+/*
+ * TM2_OPTYPE_PRIORBOX 算子的 TM2 模型参数解析器。
+ * 这一百来个解析器都是同一个三段式模板（统一说明见 tmfile/tm2_serializer.c
+ * 文件头的新手导读），本文件的区别只在于：
+ *   - tm2_load_priorbox：把模型里的 TM2_PriorBoxParam 拷入 IR 的 priorbox_param；
+ *   - register/unregister：把解析函数挂到 "tengine" 序列化器的解析规则表上。
+ */
+
 #include "priorbox_param.h"
 
 #include "graph/tensor.h"
@@ -53,20 +61,36 @@ static int tm2_load_priorbox(struct graph* ir_graph, struct node* ir_node, const
 
     priorbox_param->min_size_num = v_minsizes->v_num;
     priorbox_param->min_size = (float*)sys_malloc(v_minsizes->v_num * sizeof(float));
+    if (NULL == priorbox_param->min_size)
+    {
+        return -1;
+    }
     for (unsigned int i = 0; i < v_minsizes->v_num; i++)
         priorbox_param->min_size[i] = v_minsizes->data[i];
 
     priorbox_param->max_size_num = v_maxsizes->v_num;
     priorbox_param->max_size = (float*)sys_malloc(v_maxsizes->v_num * sizeof(float));
+    if (NULL == priorbox_param->max_size)
+    {
+        return -1;
+    }
     for (unsigned int i = 0; i < v_maxsizes->v_num; i++)
         priorbox_param->max_size[i] = v_maxsizes->data[i];
 
     priorbox_param->variance = (float*)sys_malloc(v_variances->v_num * sizeof(float));
+    if (NULL == priorbox_param->variance)
+    {
+        return -1;
+    }
     for (unsigned int i = 0; i < v_variances->v_num; i++)
         priorbox_param->variance[i] = v_variances->data[i];
 
     priorbox_param->aspect_ratio_size = v_ratios->v_num;
     priorbox_param->aspect_ratio = (float*)sys_malloc(v_ratios->v_num * sizeof(float));
+    if (NULL == priorbox_param->aspect_ratio)
+    {
+        return -1;
+    }
     for (unsigned int i = 0; i < v_ratios->v_num; i++)
         priorbox_param->aspect_ratio[i] = v_ratios->data[i];
 
@@ -104,6 +128,12 @@ int register_tm2_priorbox_op()
 int unregister_tm2_priorbox_op()
 {
     struct serializer* tm2_s = find_serializer_via_name("tengine");
+
+    if (tm2_s == NULL)
+    {
+        TLOG_ERR("tengine serializer has not been registered yet\n");
+        return -1;
+    }
 
     tm2_s->unregister_op_loader(tm2_s, TM2_OPTYPE_PRIORBOX, 1, tm2_load_priorbox);
 

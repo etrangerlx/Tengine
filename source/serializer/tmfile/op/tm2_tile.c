@@ -22,6 +22,14 @@
  * Author: bzhang@openailab.com
  */
 
+/*
+ * TM2_OPTYPE_TILE 算子的 TM2 模型参数解析器。
+ * 这一百来个解析器都是同一个三段式模板（统一说明见 tmfile/tm2_serializer.c
+ * 文件头的新手导读），本文件的区别只在于：
+ *   - tm2_load_tile：把模型里的 TM2_TileParam 拷入 IR 的 tile_param；
+ *   - register/unregister：把解析函数挂到 "tengine" 序列化器的解析规则表上。
+ */
+
 #include "tile_param.h"
 
 #include "graph/tensor.h"
@@ -53,6 +61,10 @@ static int tm2_load_tile(struct graph* ir_graph, struct node* ir_node, const TM2
         tile_param->reps_size = v_re_shape->v_num;
 
         tile_param->reps = (int*)sys_malloc(v_re_shape->v_num * sizeof(int));
+        if (NULL == tile_param->reps)
+        {
+            return -1;
+        }
 
         for (unsigned int i = 0; i < v_re_shape->v_num; i++)
         {
@@ -81,6 +93,12 @@ int register_tm2_tile_op()
 int unregister_tm2_tile_op()
 {
     struct serializer* tm2_s = find_serializer_via_name("tengine");
+
+    if (tm2_s == NULL)
+    {
+        TLOG_ERR("tengine serializer has not been registered yet\n");
+        return -1;
+    }
 
     tm2_s->unregister_op_loader(tm2_s, TM2_OPTYPE_TILE, 1, tm2_load_tile);
 

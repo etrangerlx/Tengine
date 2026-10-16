@@ -22,6 +22,14 @@
  * Author: haitao@openailab.com
  */
 
+/*
+ * TM2_OPTYPE_TRANSPOSE 算子的 TM2 模型参数解析器。
+ * 这一百来个解析器都是同一个三段式模板（统一说明见 tmfile/tm2_serializer.c
+ * 文件头的新手导读），本文件的区别只在于：
+ *   - tm2_load_transpose：把模型里的 TM2_TransposeParam 拷入 IR 的 transpose_param；
+ *   - register/unregister：把解析函数挂到 "tengine" 序列化器的解析规则表上。
+ */
+
 #include "transpose_param.h"
 
 #include "graph/tensor.h"
@@ -51,6 +59,10 @@ static int tm2_load_transpose(struct graph* ir_graph, struct node* ir_node, cons
     {
         const TM2_Vector_dims* v_re_shape = (TM2_Vector_dims*)(mem_base + tm_param->offset_tr_shape);
         transpose_param->tr_shape = (int*)sys_malloc(v_re_shape->v_num * sizeof(int));
+        if (NULL == transpose_param->tr_shape)
+        {
+            return -1;
+        }
         transpose_param->tr_shape_size = v_re_shape->v_num;
 
         for (unsigned int i = 0; i < v_re_shape->v_num; i++)
@@ -80,6 +92,12 @@ int register_tm2_transpose_op()
 int unregister_tm2_transpose_op()
 {
     struct serializer* tm2_s = find_serializer_via_name("tengine");
+
+    if (tm2_s == NULL)
+    {
+        TLOG_ERR("tengine serializer has not been registered yet\n");
+        return -1;
+    }
 
     tm2_s->unregister_op_loader(tm2_s, TM2_OPTYPE_TRANSPOSE, 1, tm2_load_transpose);
 

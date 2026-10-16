@@ -22,6 +22,17 @@
  * Author: lswang@openailab.com
  */
 
+/*
+ * ============================== 新手导读 ==============================
+ * 设备（ir_device_t）代表一个可执行网络的硬件后端，例如 CPU、GPU。
+ * 它本质上是几组函数指针的容器（见 device/device.h）：
+ *   - interface：设备接口（初始化、卸载、建图、执行等）；
+ *   - allocator / optimizer / scheduler：内存分配、图优化、调度策略。
+ *
+ * 设备在 module.c 的设备注册表中登记，按名字（如 "CPU"）查找。
+ * ======================================================================
+ */
+
 #include "device/device.h"
 
 #include "utility/vector.h"
@@ -36,7 +47,7 @@ void init_ir_device(ir_device_t* device, const char* name)
     }
     else
     {
-        // this may lead to some issues
+        /* 兜底叫 "CPU"：正常流程都会传入名字，这里仅作防御 */
         device->name = "CPU";
     }
 
@@ -47,6 +58,7 @@ void init_ir_device(ir_device_t* device, const char* name)
     device->privacy = NULL;
 }
 
+/* 设备私有配置的大小尚未定义 */
 int get_device_option_size(ir_device_t* device)
 {
     // TODO: need an impl

@@ -22,6 +22,14 @@
  * Author: bzhang@openailab.com
  */
 
+/*
+ * TM2_OPTYPE_EXPAND 算子的 TM2 模型参数解析器。
+ * 这一百来个解析器都是同一个三段式模板（统一说明见 tmfile/tm2_serializer.c
+ * 文件头的新手导读），本文件的区别只在于：
+ *   - tm2_load_expand：把模型里的 TM2_ExpandParam 拷入 IR 的 expand_param；
+ *   - register/unregister：把解析函数挂到 "tengine" 序列化器的解析规则表上。
+ */
+
 #include "expand_param.h"
 
 #include "graph/tensor.h"
@@ -51,6 +59,10 @@ static int tm2_load_expand(struct graph* ir_graph, struct node* ir_node, const T
     {
         const TM2_Vector_dims* v_ex_shape = (TM2_Vector_dims*)(mem_base + tm_param->offset_ex_shape);
         param->ex_shape = (int*)sys_malloc(v_ex_shape->v_num * sizeof(int));
+        if (NULL == param->ex_shape)
+        {
+            return -1;
+        }
 
         for (unsigned int i = 0; i < v_ex_shape->v_num; i++)
         {
@@ -80,6 +92,12 @@ int register_tm2_expand_op()
 int unregister_tm2_expand_op()
 {
     struct serializer* tm2_s = find_serializer_via_name("tengine");
+
+    if (tm2_s == NULL)
+    {
+        TLOG_ERR("tengine serializer has not been registered yet\n");
+        return -1;
+    }
 
     tm2_s->unregister_op_loader(tm2_s, TM2_OPTYPE_EXPAND, 1, tm2_load_expand);
 

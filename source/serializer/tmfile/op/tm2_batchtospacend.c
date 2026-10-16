@@ -22,6 +22,14 @@
  * Author: qtang@openailab.com
  */
 
+/*
+ * TM2_OPTYPE_BATCHTOSPACEND 算子的 TM2 模型参数解析器。
+ * 这一百来个解析器都是同一个三段式模板（统一说明见 tmfile/tm2_serializer.c
+ * 文件头的新手导读），本文件的区别只在于：
+ *   - tm2_load_batchtospacend：把模型里的 TM2_BatchToSpaceNDParam 拷入 IR 的 batchtospacend_param；
+ *   - register/unregister：把解析函数挂到 "tengine" 序列化器的解析规则表上。
+ */
+
 #include "batchtospacend_param.h"
 
 #include "graph/tensor.h"
@@ -74,6 +82,12 @@ int register_tm2_batchtospacend_op()
 int unregister_tm2_batchtospacend_op()
 {
     struct serializer* tm2_s = find_serializer_via_name("tengine");
+
+    if (tm2_s == NULL)
+    {
+        TLOG_ERR("tengine serializer has not been registered yet\n");
+        return -1;
+    }
 
     tm2_s->unregister_op_loader(tm2_s, TM2_OPTYPE_BATCHTOSPACEND, 1, tm2_load_batchtospacend);
 

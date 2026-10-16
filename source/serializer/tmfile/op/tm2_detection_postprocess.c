@@ -22,6 +22,14 @@
  * Author: qli@openailab.com
  */
 
+/*
+ * TM2_OPTYPE_DETECTIONPOSTPROCESS 算子的 TM2 模型参数解析器。
+ * 这一百来个解析器都是同一个三段式模板（统一说明见 tmfile/tm2_serializer.c
+ * 文件头的新手导读），本文件的区别只在于：
+ *   - tm2_load_detection_postprocess：把模型里的 TM2_DetectionPostProcessParam 拷入 IR 的 detection_postprocess_param；
+ *   - register/unregister：把解析函数挂到 "tengine" 序列化器的解析规则表上。
+ */
+
 #include "detection_postprocess_param.h"
 
 #include "graph/tensor.h"
@@ -56,6 +64,10 @@ static int tm2_load_detection_postprocess(struct graph* ir_graph, struct node* i
 
     const TM2_Vector_floats* vf_scales = (TM2_Vector_floats*)(mem_base + tm_param->offset_vf_scales);
     detection_postprocess_param->scales = (float*)sys_malloc(vf_scales->v_num * sizeof(float));
+    if (NULL == detection_postprocess_param->scales)
+    {
+        return -1;
+    }
 
     for (unsigned int i = 0; i < vf_scales->v_num;
          i++) // TODO : need to check v_num .Next called in run function(detection_postprocess) default as 4 ?
@@ -83,6 +95,12 @@ int register_tm2_detection_postprocess_op()
 int unregister_tm2_detection_postprocess_op()
 {
     struct serializer* tm2_s = find_serializer_via_name("tengine");
+
+    if (tm2_s == NULL)
+    {
+        TLOG_ERR("tengine serializer has not been registered yet\n");
+        return -1;
+    }
 
     tm2_s->unregister_op_loader(tm2_s, TM2_OPTYPE_DETECTIONPOSTPROCESS, 1, tm2_load_detection_postprocess);
 

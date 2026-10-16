@@ -23,6 +23,13 @@
  * Revised: lswang@openailab.com
  */
 
+/*
+ * ============================== 新手导读 ==============================
+ * 杂项工具集：枚举值转可读字符串、按名字/类型查算子、数据类型查询、
+ * 调试数据导出、位掩码统计。都是小函数，供全工程随手取用。
+ * ======================================================================
+ */
+
 #include "utility/utils.h"
 
 #include "defines.h"
@@ -33,6 +40,10 @@
 
 #include <stdio.h>
 #include <string.h>
+
+/* ------------------------------------------------------------------ */
+/* 枚举值转可读字符串（主要用于日志和 dump 输出）                        */
+/* ------------------------------------------------------------------ */
 
 const char* get_tensor_type_string(int tensor_type)
 {
@@ -82,6 +93,32 @@ const char* get_model_format_string(int model_format)
     }
 }
 
+const char* get_tensor_data_type_string(int data_type)
+{
+    switch (data_type)
+    {
+    case TENGINE_DT_FP32:
+        return "fp32";
+    case TENGINE_DT_FP16:
+        return "fp16";
+    case TENGINE_DT_INT8:
+        return "int8";
+    case TENGINE_DT_UINT8:
+        return "uint8";
+    case TENGINE_DT_INT32:
+        return "int32";
+    case TENGINE_DT_INT16:
+        return "int16";
+    default:
+        return "unknown";
+    }
+}
+
+/* ------------------------------------------------------------------ */
+/* 算子与数据类型查询                                                   */
+/* ------------------------------------------------------------------ */
+
+/* 遍历所有已注册算子，按名字查找算子类型。找不到返回 -1 */
 int get_op_type_from_name(const char* name)
 {
     int count = get_op_method_count();
@@ -104,6 +141,7 @@ const char* get_op_name_from_type(int op_type)
     return find_op_name(op_type);
 }
 
+/* 单个元素的字节数（张量总大小 = elem_num * elem_size）。未知类型返回 0 */
 int get_tenser_element_size(int data_type)
 {
     switch (data_type)
@@ -122,27 +160,7 @@ int get_tenser_element_size(int data_type)
     }
 }
 
-const char* get_tensor_data_type_string(int data_type)
-{
-    switch (data_type)
-    {
-    case TENGINE_DT_FP32:
-        return "fp32";
-    case TENGINE_DT_FP16:
-        return "fp16";
-    case TENGINE_DT_INT8:
-        return "int8";
-    case TENGINE_DT_UINT8:
-        return "uint8";
-    case TENGINE_DT_INT32:
-        return "int32";
-    case TENGINE_DT_INT16:
-        return "int16";
-    default:
-        return "unknown";
-    }
-}
-
+/* 数据类型的类型缩写，供序列化等场景使用。未知类型返回 NULL */
 const char* data_type_typeinfo_name(int data_type)
 {
     switch (data_type)
@@ -156,9 +174,19 @@ const char* data_type_typeinfo_name(int data_type)
     }
 }
 
+/* ------------------------------------------------------------------ */
+/* 调试工具                                                             */
+/* ------------------------------------------------------------------ */
+
+/* 把一组浮点数据导出到文本文件，每行 16 个，便于肉眼检查或 diff */
 void dump_float(const char* file_name, float* data, int number)
 {
     FILE* fp = fopen(file_name, "w");
+
+    if (NULL == fp)
+    {
+        return;
+    }
 
     for (int i = 0; i < number; i++)
     {
@@ -174,17 +202,23 @@ void dump_float(const char* file_name, float* data, int number)
     fclose(fp);
 }
 
+/* ------------------------------------------------------------------ */
+/* 位掩码工具                                                           */
+/* ------------------------------------------------------------------ */
+
+/* 统计掩码中置 1 的位个数 */
 int get_mask_count(size_t mask)
 {
     int count = 0;
 
-    for (int i = 0; i < sizeof(mask) * 8; i++)
-        if (mask & (1 << i))
+    for (int i = 0; i < (int)(sizeof(mask) * 8); i++)
+        if (mask & ((size_t)1 << i))
             count++;
 
     return count;
 }
 
+/* 若掩码恰好只有一位是 1，返回该位的位置；否则返回 -1 */
 int get_mask_index(size_t mask)
 {
     if (get_mask_count(mask) > 1)
@@ -192,9 +226,9 @@ int get_mask_index(size_t mask)
         return -1;
     }
 
-    for (int i = 0; i < sizeof(mask) * 8; i++)
+    for (int i = 0; i < (int)(sizeof(mask) * 8); i++)
     {
-        if (mask & (1 << i))
+        if (mask & ((size_t)1 << i))
         {
             return i;
         }

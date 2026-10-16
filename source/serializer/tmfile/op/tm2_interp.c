@@ -22,6 +22,14 @@
  * Author: haitao@openailab.com
  */
 
+/*
+ * TM2_OPTYPE_INTERP 算子的 TM2 模型参数解析器。
+ * 这一百来个解析器都是同一个三段式模板（统一说明见 tmfile/tm2_serializer.c
+ * 文件头的新手导读），本文件的区别只在于：
+ *   - tm2_load_interp：把模型里的 TM2_InterpParam 拷入 IR 的 interp_param；
+ *   - register/unregister：把解析函数挂到 "tengine" 序列化器的解析规则表上。
+ */
+
 #include "interp_param.h"
 
 #include "graph/tensor.h"
@@ -74,6 +82,12 @@ int register_tm2_interp_op()
 int unregister_tm2_interp_op()
 {
     struct serializer* tm2_s = find_serializer_via_name("tengine");
+
+    if (tm2_s == NULL)
+    {
+        TLOG_ERR("tengine serializer has not been registered yet\n");
+        return -1;
+    }
 
     tm2_s->unregister_op_loader(tm2_s, TM2_OPTYPE_INTERP, 1, tm2_load_interp);
 

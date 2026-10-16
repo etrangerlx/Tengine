@@ -22,6 +22,17 @@
  * Author: haitao@openailab.com
  */
 
+/*
+ * ============================== 新手导读 ==============================
+ * 内存分配的统一入口。全工程所有堆内存都必须通过
+ * sys_malloc / sys_free / sys_realloc 申请和释放，
+ * 便于集中排查内存问题：
+ *   - 默认配置：直接转发标准库 malloc / free / realloc；
+ *   - 打开 CONFIG_MEM_STAT：转发到带统计的版本（见 mem_stat.c），
+ *     可在运行期追踪每一块内存的分配来源。
+ * ======================================================================
+ */
+
 #include "utility/sys_port.h"
 
 #include <string.h>
@@ -73,6 +84,7 @@ void* sys_realloc(void* ptr, size_t size)
 
 #endif
 
+/* Cortex-M 等嵌入式平台的标准库可能没有 strdup，这里补一个实现 */
 #ifdef CONFIG_ARCH_CORTEX_M
 
 char* strdup(const char* src)
